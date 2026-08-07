@@ -1,0 +1,6 @@
+{
+  "name": "project-intake",
+  "version": "1.0.0",
+  "description": "Turns vague requests into structured, audited briefs through a guided conversation pipeline.",
+  "minCliVersion": "0.1.0"
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@agnojf/alson",
+  "version": "0.1.0",
+  "description": "CLI to search, install, delete, and update agent skills on your machine",
+  "license": "MIT",
+  "bin": {
+    "alson": "bin/alson"
+  },
+  "files": [
+    "bin",
+    "dist/src",
+    "dist/scripts",
+    "catalog.json",
+    "skills",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc && node dist/scripts/generate-catalog.js",
+    "test": "npm run build && node --test \"dist/tests/**/*.test.js\"",
+    "lint": "tsc --noEmit",
+    "pack": "npm pack --json",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}
