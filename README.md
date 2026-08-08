@@ -23,6 +23,7 @@ All Alson skills share the same operating rules:
 | Skill | Purpose |
 |---|---|
 | `project-intake` | Turns vague or new requests into a structured, audited brief. Asks one question at a time and stops when the request is actionable. Runs a Build, Measure, Learn pipeline. Does not authorize work or make decisions for the requester. |
+| `status-report` | Turns project evidence into an audited project status report. Leads with overall health (RAG) and key metrics. Runs a Build, Measure, Learn pipeline. Every health claim requires evidence; missing evidence means Gray, not Green. Does not reconcile project updates or fabricate evidence. |
 
 More skills ship with each release.
 
