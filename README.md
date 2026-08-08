@@ -35,7 +35,7 @@ Alson maintains the official skill catalog. Skills are reviewed, tested, and bun
 Install the CLI globally once:
 
 ```bash
-npm install -g @agnojf/alson
+npm install -g @agnojf/alson@latest
 ```
 
 If npm reports an EACCES permission error, the global npm directory is not writable by your user. Use a user-owned Node installation (for example nvm) or set a user-level npm prefix instead of using sudo:
@@ -43,10 +43,25 @@ If npm reports an EACCES permission error, the global npm directory is not writa
 ```bash
 npm config set prefix "$HOME/.npm-global"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
-npm install -g @agnojf/alson
+npm install -g @agnojf/alson@latest
 ```
 
 The CLI works fully offline after installation.
+
+## Update the CLI
+
+New skills and fixes ship with new CLI releases. Update to the newest version:
+
+```bash
+npm install -g @agnojf/alson@latest
+alson --version
+```
+
+Then update your installed skills:
+
+```bash
+alson update --all
+```
 
 ## Repository-Local Skills
 
@@ -69,6 +84,10 @@ my-repo/.agents/alson/installed.json
 - `.agents/alson/installed.json` is Alson's bookkeeping: installed versions, hashes, and timestamps.
 - Each repository has its own install set, isolated from every other repository.
 - The CLI resolves the repository by walking up from the current directory to the nearest `.git` directory. Outside a repository it fails with a clear error.
+
+## Using Installed Skills
+
+After installing or updating a skill, start a new session in your agent tool (for example Codex, OpenCode, or Claude Code). Skills are discovered when a session starts. If the skill does not appear, fully restart the agent tool.
 
 ## Usage
 
