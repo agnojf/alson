@@ -1,0 +1,6 @@
+{
+  "name": "closure-report",
+  "version": "1.0.0",
+  "description": "Turns project context into an audited Project Closure Report through a Build-Measure-Learn pipeline.",
+  "minCliVersion": "0.1.0"
+}
