@@ -9,6 +9,7 @@ export type ErrorCode =
   | 'StateCorrupt'
   | 'UnknownCommand'
   | 'Rollback'
+  | 'NoRepository'
   | 'Usage';
 
 export class AlsonError extends Error {

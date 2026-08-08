@@ -4,7 +4,7 @@ Alson is a thinking partner. It helps people think clearly, decide well, and pro
 
 Alson works by moving from unclear intent to clear action: clarify the real problem, surface assumptions, constraints, and risks, compare options and trade-offs, and turn decisions into practical outputs.
 
-The `alson` CLI installs Alson's skill sets on your machine. Skills are focused instruction packages that any compatible agent tool can load. The CLI searches, installs, updates, and deletes those skills.
+The `alson` CLI installs Alson's skill sets into your repositories. Skills are focused instruction packages that any compatible agent tool can load. The CLI searches, installs, updates, and deletes those skills.
 
 ## Skill Sets
 
@@ -32,11 +32,43 @@ Alson maintains the official skill catalog. Skills are reviewed, tested, and bun
 
 ## Installation
 
+Install the CLI globally once:
+
 ```bash
 npm install -g @agnojf/alson
 ```
 
-The CLI installs skills to `~/.agents/skills/`. It works fully offline after installation.
+If npm reports an EACCES permission error, the global npm directory is not writable by your user. Use a user-owned Node installation (for example nvm) or set a user-level npm prefix instead of using sudo:
+
+```bash
+npm config set prefix "$HOME/.npm-global"
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
+npm install -g @agnojf/alson
+```
+
+The CLI works fully offline after installation.
+
+## Repository-Local Skills
+
+Skills install into the repository you are working in, not your home directory. From a repository root or any subdirectory:
+
+```bash
+cd my-repo
+alson list
+alson install project-intake
+```
+
+This creates:
+
+```text
+my-repo/.agents/skills/project-intake/
+my-repo/.agents/alson/installed.json
+```
+
+- `.agents/skills/` holds the installed skills.
+- `.agents/alson/installed.json` is Alson's bookkeeping: installed versions, hashes, and timestamps.
+- Each repository has its own install set, isolated from every other repository.
+- The CLI resolves the repository by walking up from the current directory to the nearest `.git` directory. Outside a repository it fails with a clear error.
 
 ## Usage
 
@@ -64,6 +96,7 @@ alson delete project-intake
 
 - It does not execute skills. Skills run inside an agent tool that supports Agent Skills.
 - It does not fetch skills from the network. Skills ship bundled inside the CLI package.
+- It does not install skills into your home directory. Skills are always repository-local.
 
 ## Safety
 

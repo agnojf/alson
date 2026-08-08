@@ -21,8 +21,10 @@ Add to your `opencode.json`:
 ### Agent tools with .agents/skills/ support
 
 ```bash
-cp -r project-intake ~/.agents/skills/
+alson install project-intake
 ```
+
+The skill installs into the current repository's `.agents/skills/project-intake/`.
 
 ### Manual
 
