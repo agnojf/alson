@@ -1,14 +1,38 @@
-# alson
+# Alson
 
-CLI to search, install, delete, and update agent skills on your machine.
+Alson is a thinking partner. It helps people think clearly, decide well, and produce usable outputs. It supports human judgment. It does not replace it.
 
-Skills are instruction packages (a `SKILL.md` directory) consumed by agent tools that support Agent Skills. The CLI ships with a bundled catalog of skills, works fully offline, and installs skills to `~/.agents/skills/`.
+Alson works by moving from unclear intent to clear action: clarify the real problem, surface assumptions, constraints, and risks, compare options and trade-offs, and turn decisions into practical outputs.
+
+This repository contains Alson's skill sets and the `alson` CLI that manages them. Skills are focused instruction packages that any compatible agent tool can load. The CLI searches, installs, updates, and deletes those skills on your machine.
+
+## Skill Sets
+
+Skills are instruction packages. Each one contains a `SKILL.md` with the skill's behavior and workflow, plus reference files, metadata, and documentation. A skill triggers when a request matches its description.
+
+All Alson skills share the same operating rules:
+
+- Be direct, calm, neutral, and practical.
+- Lead with the answer, decision point, or next action.
+- Separate facts from assumptions and options from recommendations.
+- State uncertainty clearly. Never fabricate evidence.
+- Support human judgment. Never take ownership of decisions.
+
+### Available Skills
+
+| Skill | Purpose |
+|---|---|
+| `project-intake` | Turns vague or new requests into a structured, audited brief. Asks one question at a time and stops when the request is actionable. Runs a Build, Measure, Learn pipeline. Does not authorize work or make decisions for the requester. |
+
+More skills ship with each release.
 
 ## Installation
 
 ```bash
 npm install -g @agnojf/alson
 ```
+
+The CLI installs skills to `~/.agents/skills/`. It works fully offline after installation.
 
 ## Usage
 
@@ -31,6 +55,12 @@ alson install project-intake
 alson update --all
 alson delete project-intake
 ```
+
+## What the CLI Does Not Do
+
+- It does not execute skills. Skills run inside an agent tool that supports Agent Skills.
+- The `run` command is deferred.
+- It does not fetch skills from the network. Skills ship bundled inside the CLI package.
 
 ## Safety
 
@@ -66,6 +96,13 @@ npm pack          # verify the publishable tarball
 2. Run `npm run build` to validate the package and regenerate the catalog.
 3. Bump the CLI version and publish.
 
+## Release Workflow
+
+1. Update or add skill packages under `skills/`.
+2. Bump skill versions in `skill.json` and the CLI version in `package.json`.
+3. Run `npm run build`, `npm test`, and `npm run lint`.
+4. Publish: `npm publish --access public`.
+
 ## Repository Layout
 
 ```text
@@ -78,6 +115,15 @@ alson/
 ├── catalog.json           Generated skill catalog
 └── package.json
 ```
+
+## Related Repositories
+
+| Repository | Contains |
+|---|---|
+| `agnojf/alson` | This repository: the public CLI, bundled skills, tests, catalog, and npm package |
+| `agnojf/alson-workspace` | Alson's authoring workflows: workspaces, pipeline contracts, and planning artifacts |
+
+Workspaces and pipeline contracts are not stored in this repository.
 
 ## License
 
