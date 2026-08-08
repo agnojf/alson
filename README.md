@@ -4,7 +4,7 @@ Alson is a thinking partner. It helps people think clearly, decide well, and pro
 
 Alson works by moving from unclear intent to clear action: clarify the real problem, surface assumptions, constraints, and risks, compare options and trade-offs, and turn decisions into practical outputs.
 
-This repository contains Alson's skill sets and the `alson` CLI that manages them. Skills are focused instruction packages that any compatible agent tool can load. The CLI searches, installs, updates, and deletes those skills on your machine.
+The `alson` CLI installs Alson's skill sets on your machine. Skills are focused instruction packages that any compatible agent tool can load. The CLI searches, installs, updates, and deletes those skills.
 
 ## Skill Sets
 
@@ -25,6 +25,10 @@ All Alson skills share the same operating rules:
 | `project-intake` | Turns vague or new requests into a structured, audited brief. Asks one question at a time and stops when the request is actionable. Runs a Build, Measure, Learn pipeline. Does not authorize work or make decisions for the requester. |
 
 More skills ship with each release.
+
+## Curated Catalog
+
+Alson maintains the official skill catalog. Skills are reviewed, tested, and bundled into published releases. Users install only the skills included in the version of the CLI they have installed.
 
 ## Installation
 
@@ -59,7 +63,6 @@ alson delete project-intake
 ## What the CLI Does Not Do
 
 - It does not execute skills. Skills run inside an agent tool that supports Agent Skills.
-- The `run` command is deferred.
 - It does not fetch skills from the network. Skills ship bundled inside the CLI package.
 
 ## Safety
@@ -79,51 +82,6 @@ alson delete project-intake
 | modified | Installed files differ from the recorded hash |
 | unmanaged | The skill exists but was not installed by the CLI |
 | incompatible | Skill requires a newer CLI version |
-
-## Development
-
-```bash
-npm install
-npm run build     # compile and generate catalog.json
-npm test          # unit, integration, and package tests
-npm run lint      # type-check
-npm pack          # verify the publishable tarball
-```
-
-## Adding a Skill
-
-1. Add the skill package under `skills/<name>/` with `SKILL.md` and `skill.json`.
-2. Run `npm run build` to validate the package and regenerate the catalog.
-3. Bump the CLI version and publish.
-
-## Release Workflow
-
-1. Update or add skill packages under `skills/`.
-2. Bump skill versions in `skill.json` and the CLI version in `package.json`.
-3. Run `npm run build`, `npm test`, and `npm run lint`.
-4. Publish: `npm publish --access public`.
-
-## Repository Layout
-
-```text
-alson/
-├── bin/alson              CLI entry point
-├── src/                   TypeScript source
-├── scripts/               Catalog generation
-├── skills/                Bundled skill packages
-├── tests/                 Unit, integration, and package tests
-├── catalog.json           Generated skill catalog
-└── package.json
-```
-
-## Related Repositories
-
-| Repository | Contains |
-|---|---|
-| `agnojf/alson` | This repository: the public CLI, bundled skills, tests, catalog, and npm package |
-| `agnojf/alson-workspace` | Alson's authoring workflows: workspaces, pipeline contracts, and planning artifacts |
-
-Workspaces and pipeline contracts are not stored in this repository.
 
 ## License
 
