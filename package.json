@@ -3,6 +3,14 @@
   "version": "0.6.0",
   "description": "CLI to search, install, delete, and update agent skills on your machine",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agnojf/alson.git"
+  },
+  "homepage": "https://github.com/agnojf/alson",
+  "bugs": {
+    "url": "https://github.com/agnojf/alson/issues"
+  },
   "bin": {
     "alson": "bin/alson"
   },
@@ -19,6 +27,7 @@
   },
   "scripts": {
     "build": "tsc && node dist/scripts/generate-catalog.js",
+    "prepare": "npm run build",
     "test": "npm run build && node --test \"dist/tests/**/*.test.js\"",
     "lint": "tsc --noEmit",
     "pack": "npm pack --json",

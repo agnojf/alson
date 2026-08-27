@@ -35,7 +35,7 @@ async function main(): Promise<void> {
 
   const catalog = { version: 1, skills: entries };
   await atomicWriteFile(path.join(root, 'catalog.json'), JSON.stringify(catalog, null, 2) + '\n');
-  console.log(`catalog: generated ${entries.length} skill(s)`);
+  console.error(`catalog: generated ${entries.length} skill(s)`);
 }
 
 main().catch((err) => {

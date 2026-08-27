@@ -32,14 +32,20 @@ More skills ship with each release.
 
 ## Curated Catalog
 
-Alson maintains the official skill catalog. Skills are reviewed, tested, and bundled into published releases. Users install only the skills included in the version of the CLI they have installed.
+Alson maintains the official skill catalog. Skills are reviewed, tested, and bundled into tagged GitHub releases. Users install only the skills included in the version of the CLI they have installed.
 
 ## Installation
 
-Install the CLI globally once:
+Install the CLI globally from GitHub:
 
 ```bash
-npm install -g @agnojf/alson@latest
+npm install -g git+https://github.com/agnojf/alson.git
+```
+
+For a stable release, replace the default branch with its Git tag:
+
+```bash
+npm install -g git+https://github.com/agnojf/alson.git#vX.Y.Z
 ```
 
 If npm reports an EACCES permission error, the global npm directory is not writable by your user. Use a user-owned Node installation (for example nvm) or set a user-level npm prefix instead of using sudo:
@@ -47,19 +53,21 @@ If npm reports an EACCES permission error, the global npm directory is not writa
 ```bash
 npm config set prefix "$HOME/.npm-global"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
-npm install -g @agnojf/alson@latest
+npm install -g git+https://github.com/agnojf/alson.git
 ```
 
 The CLI works fully offline after installation.
 
 ## Update the CLI
 
-New skills and fixes ship with new CLI releases. Update to the newest version:
+New skills and fixes ship with new CLI tags. Update from the default branch:
 
 ```bash
-npm install -g @agnojf/alson@latest
+npm install -g git+https://github.com/agnojf/alson.git
 alson --version
 ```
+
+To pin a release, install its tag, for example `npm install -g git+https://github.com/agnojf/alson.git#vX.Y.Z`.
 
 Then update your installed skills:
 

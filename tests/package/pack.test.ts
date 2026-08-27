@@ -7,6 +7,15 @@ import test from 'node:test';
 
 const repoRoot = path.resolve(__dirname, '../../..');
 
+test('package: GitHub installation declares the repository and prepare hook', () => {
+  const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')) as {
+    repository?: { url?: string };
+    scripts?: { prepare?: string };
+  };
+  assert.equal(packageJson.repository?.url, 'git+https://github.com/agnojf/alson.git');
+  assert.equal(packageJson.scripts?.prepare, 'npm run build');
+});
+
 test('package: npm pack includes the CLI, catalog, and every skill', () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-pack-'));
   const stdout = execFileSync('npm', ['pack', '--json', '--pack-destination', tmp], {
