@@ -38,6 +38,8 @@ Tagged releases include the compiled CLI and generated catalog. Installation doe
 
 ## Installation
 
+Install [Node.js 20 or later](https://nodejs.org/en/download), which includes npm, before installing Alson.
+
 Install the CLI globally from GitHub:
 
 ```bash
