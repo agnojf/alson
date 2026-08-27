@@ -34,6 +34,8 @@ More skills ship with each release.
 
 Alson maintains the official skill catalog. Skills are reviewed, tested, and bundled into tagged GitHub releases. Users install only the skills included in the version of the CLI they have installed.
 
+Tagged releases include the compiled CLI and generated catalog. Installation does not require TypeScript or another development tool.
+
 ## Installation
 
 Install the CLI globally from GitHub:

@@ -7,13 +7,15 @@ import test from 'node:test';
 
 const repoRoot = path.resolve(__dirname, '../../..');
 
-test('package: GitHub installation declares the repository and prepare hook', () => {
+test('package: GitHub installation declares the repository and tracked runtime files', () => {
   const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')) as {
     repository?: { url?: string };
     scripts?: { prepare?: string };
   };
   assert.equal(packageJson.repository?.url, 'git+https://github.com/agnojf/alson.git');
-  assert.equal(packageJson.scripts?.prepare, 'npm run build');
+  assert.equal(packageJson.scripts?.prepare, undefined);
+  assert.equal(fs.existsSync(path.join(repoRoot, 'dist', 'src', 'cli.js')), true);
+  assert.equal(fs.existsSync(path.join(repoRoot, 'catalog.json')), true);
 });
 
 test('package: npm pack includes the CLI, catalog, and every skill', () => {
