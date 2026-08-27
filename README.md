@@ -41,13 +41,13 @@ Tagged releases include the compiled CLI and generated catalog. Installation doe
 Install the CLI globally from GitHub:
 
 ```bash
-npm install -g git+https://github.com/agnojf/alson.git
+npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 ```
 
 For a stable release, replace the default branch with its Git tag:
 
 ```bash
-npm install -g git+https://github.com/agnojf/alson.git#vX.Y.Z
+npm install -g https://github.com/agnojf/alson/archive/refs/tags/vX.Y.Z.tar.gz
 ```
 
 If npm reports an EACCES permission error, the global npm directory is not writable by your user. Use a user-owned Node installation (for example nvm) or set a user-level npm prefix instead of using sudo:
@@ -55,7 +55,7 @@ If npm reports an EACCES permission error, the global npm directory is not writa
 ```bash
 npm config set prefix "$HOME/.npm-global"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
-npm install -g git+https://github.com/agnojf/alson.git
+npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 ```
 
 The CLI works fully offline after installation.
@@ -65,11 +65,11 @@ The CLI works fully offline after installation.
 New skills and fixes ship with new CLI tags. Update from the default branch:
 
 ```bash
-npm install -g git+https://github.com/agnojf/alson.git
+npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 alson --version
 ```
 
-To pin a release, install its tag, for example `npm install -g git+https://github.com/agnojf/alson.git#vX.Y.Z`.
+To pin a release, install its tag, for example `npm install -g https://github.com/agnojf/alson/archive/refs/tags/vX.Y.Z.tar.gz`.
 
 Then update your installed skills:
 
