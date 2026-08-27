@@ -12,6 +12,8 @@ async function copyDirSafe(src, dest) {
     await node_fs_1.default.promises.mkdir(dest, { recursive: true });
     const items = await node_fs_1.default.promises.readdir(src, { withFileTypes: true });
     for (const item of items) {
+        if (item.name === '.DS_Store')
+            continue;
         const from = node_path_1.default.join(src, item.name);
         const to = node_path_1.default.join(dest, item.name);
         if (item.isSymbolicLink()) {

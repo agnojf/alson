@@ -13,6 +13,8 @@ async function listFiles(dir, rel = '') {
     const items = await node_fs_1.default.promises.readdir(dir, { withFileTypes: true });
     items.sort((a, b) => a.name.localeCompare(b.name));
     for (const item of items) {
+        if (item.name === '.DS_Store')
+            continue;
         const rp = rel ? `${rel}/${item.name}` : item.name;
         const full = node_path_1.default.join(dir, item.name);
         if (item.isDirectory()) {
