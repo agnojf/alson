@@ -6,7 +6,7 @@
       "version": "1.0.0",
       "description": "Explains a selected item in its context with evidence, citations, and plain-English clarity.",
       "path": "skills/alson-explain",
-      "hash": "374848170f31a6736fc1c23cb8c476a67938981d81061f5f6d29c44e9ad1433e",
+      "hash": "e193d8ae2ad2cb1f14fa7d8389a999d89c40ba40c30cf82e1201e104c5ce04c9",
       "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/alson-explain",
       "files": [
         "CHANGELOG.md",
@@ -17,7 +17,7 @@
         "skill.json",
         "SKILL.md"
       ],
-      "minCliVersion": "0.1.0"
+      "minCliVersion": "0.2.0"
     },
     {
       "name": "alson-pm-control",
