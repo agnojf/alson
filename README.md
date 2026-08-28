@@ -26,6 +26,7 @@ All Alson skills share the same operating rules:
 | `status-report` | Turns project evidence into an audited project status report. Leads with overall health (RAG) and key metrics. Runs a Build, Measure, Learn pipeline. Every health claim requires evidence; missing evidence means Gray, not Green. Does not reconcile project updates or fabricate evidence. |
 | `closure-report` | Creates or revises a formal Project Closure Report for completed projects or phases. Confirms completion, summarizes results against objectives, documents outstanding items and handoff, and captures lessons learned. Runs an audited Build, Measure, Learn pipeline. Does not authorize closure or produce status reports, lessons-learned registers, or post-implementation reviews. |
 | `alson-explain` | Explains a selected item in context with evidence, citations, and plain-English clarity. Reads only the minimum context needed. Does not summarize, rewrite, research, advise, or make decisions. |
+| `alson-pm-control` | Operates living project-control registers and tailored PMI process work. Stops after review until the project manager gives explicit direction before reconciliation or other controlled changes. |
 
 The catalog is refreshed from GitHub when the CLI runs online. Skill versions are released independently from the CLI.
 
@@ -33,9 +34,11 @@ The catalog is refreshed from GitHub when the CLI runs online. Skill versions ar
 
 Alson maintains the official skill catalog in GitHub. Skills are reviewed, tested, and released independently from the CLI. The CLI verifies the package hash before installing a skill.
 
+Tagged releases include the compiled CLI and generated catalog. Installation does not require TypeScript or another development tool.
+
 ## Installation
 
-Install Node.js 20 or later, which includes npm, before installing Alson.
+Install [Node.js 20 or later](https://nodejs.org/en/download), which includes npm, before installing Alson.
 
 Install the CLI globally from GitHub:
 

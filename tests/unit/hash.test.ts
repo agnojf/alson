@@ -28,7 +28,7 @@ test('hash: a changed file changes the hash', async () => {
   assert.notEqual(await packageHash(a), await packageHash(b));
 });
 
-test('hash: ignores Finder metadata', async () => {
+test('hash: ignores Finder metadata files', async () => {
   const a = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-hash-e-'));
   const b = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-hash-f-'));
   for (const dir of [a, b]) {

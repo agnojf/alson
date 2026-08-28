@@ -9,6 +9,7 @@ import { packageHash, listFiles } from '../../src/util/hash.js';
 
 const repoRoot = path.resolve(__dirname, '../../..');
 const cliJs = path.join(repoRoot, 'dist', 'src', 'cli.js');
+const cliVersion = (JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')) as { version: string }).version;
 
 function run(args: string[], home: string, catalogUrl: string): { stdout: string; stderr: string; status: number } {
   try {
@@ -91,7 +92,7 @@ test('integration: existing skills update from a remote catalog without updating
     fs.readFileSync(path.join(home, '.agents', 'alson', 'installed.json'), 'utf8')
   ) as { installs: { 'demo-skill': { version: string; cliVersion: string; source?: string } } };
   assert.equal(state.installs['demo-skill'].version, '1.1.0');
-  assert.equal(state.installs['demo-skill'].cliVersion, '0.5.0');
+  assert.equal(state.installs['demo-skill'].cliVersion, cliVersion);
   assert.equal(state.installs['demo-skill'].source?.startsWith('file://'), true);
 });
 

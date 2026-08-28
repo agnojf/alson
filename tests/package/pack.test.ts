@@ -7,6 +7,17 @@ import test from 'node:test';
 
 const repoRoot = path.resolve(__dirname, '../../..');
 
+test('package: GitHub installation declares the repository and tracked runtime files', () => {
+  const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')) as {
+    repository?: { url?: string };
+    scripts?: { prepare?: string };
+  };
+  assert.equal(packageJson.repository?.url, 'git+https://github.com/agnojf/alson.git');
+  assert.equal(packageJson.scripts?.prepare, undefined);
+  assert.equal(fs.existsSync(path.join(repoRoot, 'dist', 'src', 'cli.js')), true);
+  assert.equal(fs.existsSync(path.join(repoRoot, 'catalog.json')), true);
+});
+
 test('package: npm pack includes the CLI, catalog, and every skill', () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-pack-'));
   const stdout = execFileSync('npm', ['pack', '--json', '--pack-destination', tmp], {
@@ -28,6 +39,8 @@ test('package: npm pack includes the CLI, catalog, and every skill', () => {
   assert.match(listing, /package\/skills\/status-report\/skill\.json/);
   assert.match(listing, /package\/skills\/alson-explain\/SKILL\.md/);
   assert.match(listing, /package\/skills\/alson-explain\/skill\.json/);
+  assert.match(listing, /package\/skills\/alson-pm-control\/SKILL\.md/);
+  assert.match(listing, /package\/skills\/alson-pm-control\/skill\.json/);
 });
 
 test('package: generated catalog includes independent skill sources and file inventories', () => {
@@ -67,4 +80,5 @@ test('package: a fresh install of the tarball runs alson --help', () => {
   assert.match(list, /project-intake/);
   assert.match(list, /status-report/);
   assert.match(list, /alson-explain/);
+  assert.match(list, /alson-pm-control/);
 });

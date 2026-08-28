@@ -1,8 +1,16 @@
 {
   "name": "@agnojf/alson",
-  "version": "0.5.0",
+  "version": "0.6.2",
   "description": "CLI to search, install, delete, and update agent skills on your machine",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agnojf/alson.git"
+  },
+  "homepage": "https://github.com/agnojf/alson",
+  "bugs": {
+    "url": "https://github.com/agnojf/alson/issues"
+  },
   "bin": {
     "alson": "bin/alson"
   },
