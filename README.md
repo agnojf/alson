@@ -34,6 +34,8 @@ The catalog is refreshed from GitHub when the CLI runs online. Skill versions ar
 
 Alson maintains the official skill catalog in GitHub. Skills are reviewed, tested, and released independently from the CLI. The CLI verifies the package hash before installing a skill.
 
+Maintainer release steps are recorded in [`CONTRIBUTING.md`](CONTRIBUTING.md). In short, update a package under `skills/`, run the build and tests, and push the regenerated catalog. A skill-only change does not require a CLI version update.
+
 Tagged releases include the compiled CLI and generated catalog. Installation does not require TypeScript or another development tool.
 
 ## Installation
