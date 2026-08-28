@@ -10,6 +10,7 @@ export interface InstallRecord {
   cliVersion: string;
   installedAt: string;
   files: string[];
+  source?: string;
 }
 
 export interface State {

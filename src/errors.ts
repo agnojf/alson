@@ -10,6 +10,9 @@ export type ErrorCode =
   | 'UnknownCommand'
   | 'Rollback'
   | 'NoRepository'
+  | 'CatalogUnavailable'
+  | 'SkillUnavailable'
+  | 'IntegrityMismatch'
   | 'Usage';
 
 export class AlsonError extends Error {

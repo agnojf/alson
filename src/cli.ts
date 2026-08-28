@@ -10,21 +10,23 @@ import { readCliVersion } from './installer/safety.js';
 const HELP = `alson - search, install, delete, and update agent skills
 
 Usage:
-  alson list                     Show every bundled skill and its status
-  alson search [query]           Search bundled skills by name or description
-  alson install <skill>          Install a bundled skill
+  alson list                     Show every available skill and its status
+  alson search [query]           Search available skills by name or description
+  alson install <skill>          Install an available skill
   alson delete <skill>           Remove an installed skill
-  alson update [skill]           Update installed skills to the bundled versions
+  alson update [skill]           Update installed skills to available versions
   alson update --all             Update every installed skill
+  alson --offline <command>      Use only the local catalog and cache
   alson --version                Print the CLI version
   alson --help                   Show this help
 
 Options:
   --force   Bypass safety checks and confirmations
+  --offline Do not access the network
 `;
 
 async function main(): Promise<void> {
-  let values: { help?: boolean; version?: boolean; force?: boolean; all?: boolean };
+  let values: { help?: boolean; version?: boolean; force?: boolean; all?: boolean; offline?: boolean };
   let positionals: string[];
   try {
     const parsed = parseArgs({
@@ -32,7 +34,8 @@ async function main(): Promise<void> {
         help: { type: 'boolean', short: 'h' },
         version: { type: 'boolean' },
         force: { type: 'boolean', short: 'f' },
-        all: { type: 'boolean' }
+        all: { type: 'boolean' },
+        offline: { type: 'boolean' }
       },
       allowPositionals: true,
       strict: true
@@ -58,17 +61,17 @@ async function main(): Promise<void> {
       process.stdout.write(HELP);
       return;
     case 'list':
-      await runList();
+      await runList({ offline: !!values.offline });
       return;
     case 'search':
-      await runSearch(rest[0]);
+      await runSearch(rest[0], { offline: !!values.offline });
       return;
     case 'install': {
       const skill = rest[0];
       if (!skill) {
         throw new AlsonError('Usage', `install requires a skill name. Run alson --help for usage`);
       }
-      await runInstall({ skill, force: !!values.force });
+      await runInstall({ skill, force: !!values.force, offline: !!values.offline });
       return;
     }
     case 'delete': {
@@ -80,7 +83,12 @@ async function main(): Promise<void> {
       return;
     }
     case 'update': {
-      await runUpdate({ skill: rest[0], all: !!values.all, force: !!values.force });
+      await runUpdate({
+        skill: rest[0],
+        all: !!values.all,
+        force: !!values.force,
+        offline: !!values.offline
+      });
       return;
     }
     default:

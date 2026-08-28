@@ -39,6 +39,18 @@ export function stagingDir(): string {
   return path.join(stateDir(), 'staging');
 }
 
+export function cacheDir(): string {
+  return path.join(stateDir(), 'cache');
+}
+
+export function catalogCacheFile(): string {
+  return path.join(cacheDir(), 'catalog.json');
+}
+
+export function skillCacheDir(name: string, version: string, hash: string): string {
+  return path.join(cacheDir(), 'skills', name, `${version}-${hash}`);
+}
+
 export function findPackageRoot(from: string): string {
   let dir = path.resolve(from);
   for (;;) {

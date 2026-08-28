@@ -2,13 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { findPackageRoot } from '../src/util/paths.js';
 import { atomicWriteFile } from '../src/util/io.js';
-import { packageHash } from '../src/util/hash.js';
+import { listFiles, packageHash } from '../src/util/hash.js';
 import { validatePackage } from '../src/catalog/validate.js';
 
 async function main(): Promise<void> {
   const root = findPackageRoot(__dirname);
   const skillsRoot = path.join(root, 'skills');
-  const entries = [];
+  const entries: Array<Record<string, unknown>> = [];
+  const sourceBase = (process.env.ALSON_SKILL_SOURCE_BASE ??
+    'https://raw.githubusercontent.com/agnojf/alson/main/skills').replace(/\/+$/, '');
 
   const items = await fs.promises.readdir(skillsRoot, { withFileTypes: true });
   const dirs = items
@@ -20,12 +22,14 @@ async function main(): Promise<void> {
     const pkgDir = path.join(skillsRoot, name);
     const manifest = await validatePackage(pkgDir, name);
     const hash = await packageHash(pkgDir);
-    const entry: Record<string, string> = {
+    const entry: Record<string, unknown> = {
       name,
       version: manifest.version,
       description: manifest.description,
       path: `skills/${name}`,
-      hash
+      hash,
+      source: `${sourceBase}/${name}`,
+      files: await listFiles(pkgDir)
     };
     if (manifest.minCliVersion) {
       entry.minCliVersion = manifest.minCliVersion;
@@ -33,7 +37,7 @@ async function main(): Promise<void> {
     entries.push(entry);
   }
 
-  const catalog = { version: 1, skills: entries };
+  const catalog = { version: 2, skills: entries };
   await atomicWriteFile(path.join(root, 'catalog.json'), JSON.stringify(catalog, null, 2) + '\n');
   console.log(`catalog: generated ${entries.length} skill(s)`);
 }

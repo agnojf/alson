@@ -3,6 +3,7 @@ import path from 'node:path';
 import { AlsonError } from '../errors.js';
 import type { Catalog, CatalogEntry } from '../catalog/catalog.js';
 import { bundledSkillsRoot } from '../catalog/catalog.js';
+import { materializeSkill } from '../catalog/remote.js';
 import { validatePackage } from '../catalog/validate.js';
 import { packageHash, listFiles } from '../util/hash.js';
 import { confirm, dirExists, removeIfExists } from '../util/io.js';
@@ -12,8 +13,11 @@ import { readState, writeState, type InstallRecord } from '../state/installed.js
 import { readCliVersion, targetDir, targetExists, verifyUnmodified } from './safety.js';
 import { copyDirSafe } from './staging.js';
 
-async function stagePackage(entry: CatalogEntry): Promise<string> {
-  const src = path.join(bundledSkillsRoot(), entry.name);
+async function stagePackage(catalog: Catalog, entry: CatalogEntry): Promise<string> {
+  const src =
+    catalog.origin === 'remote' || catalog.origin === 'cache'
+      ? await materializeSkill(entry, catalog.offline ?? false)
+      : path.join(bundledSkillsRoot(), entry.name);
   const manifest = await validatePackage(src, entry.name);
   void manifest;
   const staged = path.join(stagingDir(), `${entry.name}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
@@ -33,7 +37,8 @@ async function recordFor(entry: CatalogEntry, files: string[]): Promise<InstallR
     hash: entry.hash,
     cliVersion: await readCliVersion(),
     installedAt: new Date().toISOString(),
-    files
+    files,
+    ...(entry.source ? { source: entry.source } : {})
   };
 }
 
@@ -53,7 +58,7 @@ export async function installSkill(catalog: Catalog, entry: CatalogEntry, opts: 
     );
   }
 
-  const staged = await stagePackage(entry);
+  const staged = await stagePackage(catalog, entry);
 
   if (targetExists(entry.name) && existing && !opts.force) {
     const ok = await confirm(`${entry.name} is already installed (${existing.version}). Overwrite? (y/n)`);

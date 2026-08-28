@@ -7,6 +7,7 @@ export async function listFiles(dir: string, rel = ''): Promise<string[]> {
   const items = await fs.promises.readdir(dir, { withFileTypes: true });
   items.sort((a, b) => a.name.localeCompare(b.name));
   for (const item of items) {
+    if (item.name === '.DS_Store') continue;
     const rp = rel ? `${rel}/${item.name}` : item.name;
     const full = path.join(dir, item.name);
     if (item.isDirectory()) {

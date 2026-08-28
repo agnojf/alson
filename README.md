@@ -27,18 +27,26 @@ All Alson skills share the same operating rules:
 | `closure-report` | Creates or revises a formal Project Closure Report for completed projects or phases. Confirms completion, summarizes results against objectives, documents outstanding items and handoff, and captures lessons learned. Runs an audited Build, Measure, Learn pipeline. Does not authorize closure or produce status reports, lessons-learned registers, or post-implementation reviews. |
 | `alson-explain` | Explains a selected item in context with evidence, citations, and plain-English clarity. Reads only the minimum context needed. Does not summarize, rewrite, research, advise, or make decisions. |
 
-More skills ship with each release.
+The catalog is refreshed from GitHub when the CLI runs online. Skill versions are released independently from the CLI.
 
 ## Curated Catalog
 
-Alson maintains the official skill catalog. Skills are reviewed, tested, and bundled into published releases. Users install only the skills included in the version of the CLI they have installed.
+Alson maintains the official skill catalog in GitHub. Skills are reviewed, tested, and released independently from the CLI. The CLI verifies the package hash before installing a skill.
 
 ## Installation
 
-Install the CLI globally once:
+Install Node.js 20 or later, which includes npm, before installing Alson.
+
+Install the CLI globally from GitHub:
 
 ```bash
-npm install -g @agnojf/alson@latest
+npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
+```
+
+For a stable release, replace the default branch with its Git tag:
+
+```bash
+npm install -g https://github.com/agnojf/alson/archive/refs/tags/vX.Y.Z.tar.gz
 ```
 
 If npm reports an EACCES permission error, the global npm directory is not writable by your user. Use a user-owned Node installation (for example nvm) or set a user-level npm prefix instead of using sudo:
@@ -46,24 +54,36 @@ If npm reports an EACCES permission error, the global npm directory is not writa
 ```bash
 npm config set prefix "$HOME/.npm-global"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
-npm install -g @agnojf/alson@latest
+npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 ```
 
-The CLI works fully offline after installation.
+Already-installed skills work offline. New skill installs and updates need internet access unless the package is already in the CLI bundle or local cache.
 
-## Update the CLI
+## Update Skills
 
-New skills and fixes ship with new CLI releases. Update to the newest version:
+Update one installed skill without updating the CLI:
 
 ```bash
-npm install -g @agnojf/alson@latest
-alson --version
+alson update project-intake
 ```
 
-Then update your installed skills:
+Update every installed skill:
 
 ```bash
 alson update --all
+```
+
+Use `--offline` to use only the local catalog, package cache, and CLI bundle:
+
+```bash
+alson update project-intake --offline
+```
+
+Update the CLI separately when a CLI fix or feature is released:
+
+```bash
+npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
+alson --version
 ```
 
 ## Repository-Local Skills
@@ -95,12 +115,13 @@ After installing or updating a skill, start a new session in your agent tool (fo
 ## Usage
 
 ```text
-alson list                     Show every bundled skill and its status
-alson search [query]           Search bundled skills by name or description
-alson install <skill>          Install a bundled skill
+alson list                     Show every available skill and its status
+alson search [query]           Search available skills by name or description
+alson install <skill>          Install an available skill
 alson delete <skill>           Remove an installed skill
-alson update [skill]           Update installed skills to the bundled versions
+alson update [skill]           Update installed skills to available versions
 alson update --all             Update every installed skill
+alson --offline <command>      Use only the local catalog, cache, and CLI bundle
 alson --version                Print the CLI version
 ```
 
@@ -117,8 +138,8 @@ alson delete project-intake
 ## What the CLI Does Not Do
 
 - It does not execute skills. Skills run inside an agent tool that supports Agent Skills.
-- It does not fetch skills from the network. Skills ship bundled inside the CLI package.
 - It does not install skills into your home directory. Skills are always repository-local.
+- It does not update the CLI when a skill is updated. CLI updates use npm.
 
 ## Safety
 
@@ -132,8 +153,8 @@ alson delete project-intake
 | Status | Meaning |
 |---|---|
 | not installed | No installation found |
-| current | Installed version matches the bundle |
-| update available | Installed version is older than the bundle |
+| current | Installed version matches the catalog |
+| update available | Installed version is older than the catalog |
 | modified | Installed files differ from the recorded hash |
 | unmanaged | The skill exists but was not installed by the CLI |
 | incompatible | Skill requires a newer CLI version |

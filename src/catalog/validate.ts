@@ -38,8 +38,8 @@ export function extractReferencePaths(skillMd: string): string[] {
   return [...paths];
 }
 
-function isSafeRelativePath(p: string): boolean {
-  if (path.isAbsolute(p)) {
+export function isSafeRelativePath(p: string): boolean {
+  if (path.isAbsolute(p) || p.includes('\\')) {
     return false;
   }
   const norm = path.posix.normalize(p);

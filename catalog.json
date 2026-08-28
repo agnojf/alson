@@ -1,0 +1,101 @@
+{
+  "version": 2,
+  "skills": [
+    {
+      "name": "alson-explain",
+      "version": "1.0.0",
+      "description": "Explains a selected item in its context with evidence, citations, and plain-English clarity.",
+      "path": "skills/alson-explain",
+      "hash": "374848170f31a6736fc1c23cb8c476a67938981d81061f5f6d29c44e9ad1433e",
+      "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/alson-explain",
+      "files": [
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "references/explanation-standard.md",
+        "references/test-scenarios.md",
+        "skill.json",
+        "SKILL.md"
+      ],
+      "minCliVersion": "0.1.0"
+    },
+    {
+      "name": "closure-report",
+      "version": "1.0.0",
+      "description": "Turns project context into an audited Project Closure Report through a Build-Measure-Learn pipeline.",
+      "path": "skills/closure-report",
+      "hash": "215a956fba4063879c3d5b3e87828d973b5d784242262100e5821d4152427214",
+      "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/closure-report",
+      "files": [
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "references/acceptance-criteria.md",
+        "references/audit-findings-template.md",
+        "references/build-handoff-template.md",
+        "references/closure-report-template.md",
+        "references/definition.md",
+        "references/quality-rubric.md",
+        "references/test-scenarios.md",
+        "references/what-now-template.md",
+        "skill.json",
+        "SKILL.md"
+      ],
+      "minCliVersion": "0.1.0"
+    },
+    {
+      "name": "project-intake",
+      "version": "1.0.0",
+      "description": "Turns vague requests into structured, audited briefs through a guided conversation pipeline.",
+      "path": "skills/project-intake",
+      "hash": "498f4a4810437972b804cc52412ed21eb0e50da624ca12bd0ac798cdd300d251",
+      "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/project-intake",
+      "files": [
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "references/acceptance-criteria.md",
+        "references/audit-findings-template.md",
+        "references/build-handoff-template.md",
+        "references/conversation-guide.md",
+        "references/definition.md",
+        "references/quality-rubric.md",
+        "references/request-brief-template.md",
+        "references/test-scenarios.md",
+        "references/what-now-template.md",
+        "skill.json",
+        "SKILL.md"
+      ],
+      "minCliVersion": "0.1.0"
+    },
+    {
+      "name": "status-report",
+      "version": "1.0.0",
+      "description": "Turns project evidence into an audited project status report through a Build-Measure-Learn pipeline.",
+      "path": "skills/status-report",
+      "hash": "f7e3086acc0f9e8c96eb91b19daf7a802f67374c51b638fb245aef698eee371e",
+      "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/status-report",
+      "files": [
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "references/acceptance-criteria.md",
+        "references/audit-findings-template.md",
+        "references/build-handoff-template.md",
+        "references/definition.md",
+        "references/demo-project-evidence.md",
+        "references/markdown-spec.md",
+        "references/pmi-reporting-principles.md",
+        "references/quality-rubric.md",
+        "references/report-content-model.md",
+        "references/status-model.md",
+        "references/status-report-template.md",
+        "references/test-scenarios.md",
+        "references/what-now-template.md",
+        "skill.json",
+        "SKILL.md"
+      ],
+      "minCliVersion": "0.1.0"
+    }
+  ]
+}

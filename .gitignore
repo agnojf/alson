@@ -1,5 +1,9 @@
 .DS_Store
 node_modules/
-catalog.json
-dist/
+dist/*
+!dist/src/
+!dist/src/**
+!dist/scripts/
+!dist/scripts/**
+**/.DS_Store
 *.tgz

@@ -14,7 +14,7 @@ function run(args: string[], home: string): { stdout: string; stderr: string; st
   let status = 0;
   try {
     stdout = execFileSync(process.execPath, [cliJs, ...args], {
-      env: { ...process.env, ALSON_HOME: home },
+      env: { ...process.env, ALSON_HOME: home, ALSON_OFFLINE: '1' },
       encoding: 'utf8'
     });
   } catch (err) {

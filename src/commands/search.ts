@@ -4,10 +4,10 @@ import { computeStatuses, type SkillStatus } from '../installer/install.js';
 import { printTable } from './table.js';
 import { runList } from './list.js';
 
-export async function runSearch(query: string | undefined): Promise<void> {
-  const catalog = await loadCatalog();
+export async function runSearch(query: string | undefined, options: { offline?: boolean } = {}): Promise<void> {
+  const catalog = await loadCatalog({ offline: options.offline });
   if (query === undefined || query.trim() === '') {
-    await runList();
+    await runList(options);
     return;
   }
   const matches = searchSkills(catalog, query);
