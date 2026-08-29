@@ -1,6 +1,0 @@
-{
-  "name": "status-report",
-  "version": "1.0.0",
-  "description": "Turns project evidence into an audited project status report through a Build-Measure-Learn pipeline.",
-  "minCliVersion": "0.1.0"
-}

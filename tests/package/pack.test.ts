@@ -35,8 +35,8 @@ test('package: npm pack includes the CLI, catalog, and every skill', () => {
   assert.match(listing, /package\/catalog\.json/);
   assert.match(listing, /package\/skills\/project-intake\/SKILL\.md/);
   assert.match(listing, /package\/skills\/project-intake\/skill\.json/);
-  assert.match(listing, /package\/skills\/status-report\/SKILL\.md/);
-  assert.match(listing, /package\/skills\/status-report\/skill\.json/);
+  assert.match(listing, /package\/skills\/alson-workspace-template\/SKILL\.md/);
+  assert.match(listing, /package\/skills\/alson-workspace-template\/skill\.json/);
   assert.match(listing, /package\/skills\/alson-explain\/SKILL\.md/);
   assert.match(listing, /package\/skills\/alson-explain\/skill\.json/);
   assert.match(listing, /package\/skills\/alson-pm-control\/SKILL\.md/);
@@ -78,7 +78,7 @@ test('package: a fresh install of the tarball runs alson --help', () => {
     encoding: 'utf8'
   });
   assert.match(list, /project-intake/);
-  assert.match(list, /status-report/);
+  assert.match(list, /alson-workspace-template/);
   assert.match(list, /alson-explain/);
   assert.match(list, /alson-pm-control/);
 });

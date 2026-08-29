@@ -1,0 +1,6 @@
+{
+  "name": "alson-workspace-template",
+  "version": "1.0.0",
+  "description": "Creates and validates reusable Alson workspaces with explicit routing and stage contracts.",
+  "minCliVersion": "0.1.0"
+}

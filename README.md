@@ -23,10 +23,10 @@ All Alson skills share the same operating rules:
 | Skill | Purpose |
 |---|---|
 | `project-intake` | Turns vague or new requests into a structured, audited brief. Asks one question at a time and stops when the request is actionable. Runs a Build, Measure, Learn pipeline. Does not authorize work or make decisions for the requester. |
-| `status-report` | Turns project evidence into an audited project status report. Leads with overall health (RAG) and key metrics. Runs a Build, Measure, Learn pipeline. Every health claim requires evidence; missing evidence means Gray, not Green. Does not reconcile project updates or fabricate evidence. |
 | `closure-report` | Creates or revises a formal Project Closure Report for completed projects or phases. Confirms completion, summarizes results against objectives, documents outstanding items and handoff, and captures lessons learned. Runs an audited Build, Measure, Learn pipeline. Does not authorize closure or produce status reports, lessons-learned registers, or post-implementation reviews. |
 | `alson-explain` | Explains a selected item in context with evidence, citations, and plain-English clarity. Reads only the minimum context needed. Does not summarize, rewrite, research, advise, or make decisions. |
 | `alson-pm-control` | Operates living project-control registers and tailored PMI process work. Stops after review until the project manager gives explicit direction before reconciliation or other controlled changes. |
+| `alson-workspace-template` | Creates and configures reusable AI-assisted workspaces from the Alson skeleton with explicit routing and stage contracts. |
 
 The catalog is refreshed from GitHub when the CLI runs online. Skill versions are released independently from the CLI.
 
