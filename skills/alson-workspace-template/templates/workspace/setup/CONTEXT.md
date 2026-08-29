@@ -11,15 +11,18 @@ Initialize the reusable skeleton into a configured workspace before any work sta
 | Template | `../AGENTS.md`, `../CONTEXT.md`, `../_config/` | Full files | Defines the structure to populate |
 | Template | `questionnaire.md` | Full file | Setup questions |
 | Template | `validation-checklist.md` | Full file | Initialization checks |
+| Quality control | `../_config/quality-policy.md`, `../_config/run-state-template.md` | Full files | Defines the gate and resumable run state |
 
 ## Process
 
 1. Confirm the destination and the workspace outcome before writing.
 2. Collect only the information needed to define the workspace identity, routing, source pointers, stage interfaces, outputs, review gates, and verification checks.
 3. Populate the workspace-wide instructions and configuration without changing source material.
-4. Create concrete stages from `../stages/_TEMPLATE/` and replace every placeholder in each stage contract.
-5. Record the setup decisions in `setup/initialization-record.md` in the initialized workspace.
-6. Run the validation checklist and stop on any missing required input or failed check.
+4. Create concrete production stages from `../stages/_TEMPLATE/` and replace every placeholder in each stage contract.
+5. Keep the quality-gate and next-action roles as the final two stages. Measure and Learn are the default names; configure their paths after production stages are known.
+6. Set the threshold, acceptance criteria, rubric dimensions, correction routes, and human-only decisions.
+7. Record the setup decisions in `setup/initialization-record.md` in the initialized workspace.
+8. Run the validation checklist and stop on any missing required input or failed check.
 
 ## Outputs
 
@@ -30,3 +33,5 @@ Initialize the reusable skeleton into a configured workspace before any work sta
 | Validation result | Chat or the configured workspace's setup output | Markdown |
 
 The setup stage must not run a downstream work stage. After validation passes, route the original request again using the configured `CONTEXT.md`.
+
+The setup stage must not remove the quality gate to make an output pass. If criteria or correction ownership cannot be defined, stop setup and ask the user.

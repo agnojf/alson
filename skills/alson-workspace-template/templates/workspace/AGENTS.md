@@ -25,6 +25,15 @@ Your job is to interpret the user's request, route it to the correct stage, load
 - Keep internal mechanics behind the user-facing response unless the user asks for them.
 - Do not continue past a required review or approval gate.
 
+## Quality And Recovery
+
+- Every configured pipeline ends with quality-gate and next-action roles, named Measure and Learn by default, even when it has many production stages.
+- Measure is a hard gate. Learn runs only when the score meets the configured threshold and every applicable acceptance criterion passes.
+- When Measure fails, route each correction to the smallest responsible production stage and measure again. Do not send known-invalid work to Learn.
+- When required information, access, authority, or human judgment is missing, write `{{RUN_PATH}}/run-state.md` with status `Blocked`, ask one focused question, and stop.
+- When the user asks to stop, write `run-state.md` with status `Paused`. Resume from its recorded stage when the user says `Resume this pipeline`.
+- A governance response after the quality gate passes is `Governance pending`, not a quality failure or production blocker.
+
 ## Stage Interface Rule
 
 Every executable stage must follow this interface:
@@ -62,6 +71,7 @@ The interface is a contract.
 - Never load every workspace file by default.
 - Never invent an input path, approval, policy, requirement, or source fact.
 - Never overwrite source material unless the stage explicitly allows it.
-- Keep generated working artifacts in the stage output location unless the stage says otherwise.
+- Keep generated working artifacts in the declared run output location unless the stage says otherwise.
 - Do not run unrelated stages because they exist.
 - When a recurring output defect is found, identify the upstream instruction or reference that should be improved.
+- A failed local verification is revised and rerun in the current stage. If it cannot be resolved, record `Blocked`. A failed final quality gate follows `_config/quality-policy.md` and routes back for correction.

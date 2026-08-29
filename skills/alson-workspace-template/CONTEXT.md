@@ -10,6 +10,7 @@ This package turns the Alson workspace skeleton into a configured, reusable work
 | Create or initialize | `templates/workspace/setup/CONTEXT.md`, `questionnaire.md`, `validation-checklist.md` | Stage templates |
 | Configure root behavior | `templates/workspace/AGENTS.md`, `CONTEXT.md`, and the required `_config/` files | Setup questions and stage files |
 | Create a stage | `templates/workspace/stages/_TEMPLATE/CONTEXT.md`, `input/INPUTS.md`, and both reference READMEs | Unrelated workspace files |
+| Configure quality loop | `templates/workspace/_config/quality-policy.md`, `templates/workspace/_config/run-state-template.md`, and Measure/Learn templates | Unrelated production references |
 | Validate | `templates/workspace/setup/validation-checklist.md` and the files under review | Full template package |
 | Explain | `templates/workspace/README.md` and the minimum file needed to answer the question | Unrelated stages and references |
 
@@ -19,9 +20,10 @@ This package turns the Alson workspace skeleton into a configured, reusable work
 2. Confirm the write scope before creating or changing files.
 3. Load the selected route and only its declared references.
 4. Configure the workspace identity, router, and stable rules.
-5. Create only the stages required by the outcome.
-6. Validate the workspace.
-7. Stop if a required input, review, approval, or check is missing.
+5. Create the production stages and keep the quality-gate and next-action roles as the final two; Measure and Learn are the default names.
+6. Configure the quality threshold, acceptance criteria, correction routes, and resumable run state.
+7. Validate the workspace.
+8. Stop if a required input, review, approval, or check is missing.
 
 ## Template Root
 
@@ -36,3 +38,5 @@ Inputs -> One Transformation -> Outputs
 ```
 
 The stage contract is the boundary for reading, transforming, writing, and verifying work.
+
+The final quality contract is: a failed gate routes back to production, a blocked or paused run writes `run-state.md`, and Learn runs only after the gate passes.

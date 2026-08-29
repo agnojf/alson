@@ -10,7 +10,10 @@
 | User intent | Route to | Expected outcome |
 |---|---|---|
 | Invoke or initialize an unconfigured workspace | `setup/CONTEXT.md` | Configure the workspace before work begins |
-| [Example intent] | `stages/[stage-name]/` | [Outcome] |
+| Produce or revise an outcome | The requested production stage | Declared deliverable |
+| Check quality | `stages/02-measure/CONTEXT.md` or configured Measure stage | Quality decision and correction route |
+| Ask what happens next | `stages/03-learn/CONTEXT.md` or configured Learn stage | `what-now.md` recommendation after a passed gate |
+| Pause or resume a run | Recorded `run-state.md` and resume stage | Stop safely or continue without restarting unaffected work |
 
 ## Invocation Rule
 
@@ -22,7 +25,8 @@ On entry, read `setup/CONTEXT.md` before routing. If this template still contain
 2. Do not run the full workflow when one stage is enough.
 3. If the request requires multiple stages, run only the required stages in declared order.
 4. Stop when a required input, review, decision, or approval is missing.
-5. If no route matches, explain the gap before creating new workspace behavior.
+5. Do not route to Learn while the quality gate is failed, blocked, or paused.
+6. If no route matches, explain the gap before creating new workspace behavior.
 
 ## Composition Rules
 
@@ -39,6 +43,16 @@ Declared Inputs -> One Transformation -> Declared Outputs
 - Keep branching decisions in routing or explicit stage rules rather than burying them in unrelated transformations.
 - Re-run only the stage affected by a changed input or rule unless downstream outputs are now stale.
 
+Every configured sequential pipeline ends as:
+
+```text
+production stages -> Measure -> Learn
+                         ^
+                         | quality correction or resume
+```
+
+The default final stage paths are `stages/02-measure/` and `stages/03-learn/`. Setup renumbers or renames them when production has more stages, while preserving their contracts.
+
 ## What to Load
 
 Always load:
@@ -48,6 +62,7 @@ Always load:
 
 Load only when referenced by the selected stage:
 - `_config/*`
+- `_config/quality-policy.md` and `_config/run-state-template.md` for pipeline control
 - `references/*`
 - `shared/*`
 - selected stage `references/*`
@@ -67,11 +82,11 @@ Load only when referenced by the selected stage:
 | `shared/` | Reusable material across stages | 3 |
 | `stages/*/references/` | Stage-specific reference material | 3 |
 | `stages/*/input/` | Current-run source material or pointers | 4 |
-| `stages/*/output/` | Current-run generated artifacts | 4 |
+| `{{RUN_PATH}}/stages/*/` | Current-run generated artifacts and handoffs | 4 |
 
 ## Review Gates
 
-[Define where human review or approval is mandatory.]
+Quality failure is corrected by the agent when possible. Human review and approval gates remain mandatory where configured. Missing information or user-requested stops use the resumable `Blocked` or `Paused` run states.
 
 ## Definition of Done
 

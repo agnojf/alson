@@ -106,10 +106,10 @@
     },
     {
       "name": "alson-workspace-template",
-      "version": "1.0.0",
-      "description": "Creates and validates reusable Alson workspaces with explicit routing and stage contracts.",
+      "version": "1.1.0",
+      "description": "Creates and validates reusable Alson workspaces with explicit routing, stage contracts, quality gates, and resumable runs.",
       "path": "skills/alson-workspace-template",
-      "hash": "58738a3bb2e38d157eafdb27e247398790cc7390d32c1c834f05d19dc7b47718",
+      "hash": "09f2e4930b3bd03bc44211b90f46529928c8249b3b2ceaab279cdc9a1377c544",
       "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/alson-workspace-template",
       "files": [
         "CHANGELOG.md",
@@ -119,7 +119,9 @@
         "skill.json",
         "SKILL.md",
         "templates/workspace/_config/conventions.md",
+        "templates/workspace/_config/quality-policy.md",
         "templates/workspace/_config/review-policy.md",
+        "templates/workspace/_config/run-state-template.md",
         "templates/workspace/_config/workspace.md",
         "templates/workspace/AGENTS.md",
         "templates/workspace/CONTEXT.md",
@@ -131,8 +133,12 @@
         "templates/workspace/shared/README.md",
         "templates/workspace/stages/_TEMPLATE/CONTEXT.md",
         "templates/workspace/stages/_TEMPLATE/input/INPUTS.md",
-        "templates/workspace/stages/_TEMPLATE/output/.gitkeep",
-        "templates/workspace/stages/_TEMPLATE/references/README.md"
+        "templates/workspace/stages/_TEMPLATE/references/README.md",
+        "templates/workspace/stages/02-measure/CONTEXT.md",
+        "templates/workspace/stages/02-measure/references/acceptance-criteria.md",
+        "templates/workspace/stages/02-measure/references/quality-rubric.md",
+        "templates/workspace/stages/03-learn/CONTEXT.md",
+        "templates/workspace/stages/03-learn/references/what-now-template.md"
       ],
       "minCliVersion": "0.1.0"
     },
