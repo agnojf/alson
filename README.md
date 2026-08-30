@@ -86,7 +86,7 @@ alson update project-intake --offline
 
 ### Update Skills Across Repositories
 
-Configure each parent folder once. Alson discovers repositories that are direct children of those folders.
+Configure each parent folder once. Alson discovers repositories that are direct children of those folders. A configured path may also be a repository root.
 
 ```bash
 alson repos add ~/Documents/GitHub
@@ -114,7 +114,7 @@ alson update --all-repositories --yes
 
 The bulk command updates every installed skill with a newer catalog version. It reports current repositories, repositories with no Alson-managed skills, blocked local changes, and failures. It continues after a problem in one repository. `--force` is required to replace a locally changed skill.
 
-The configuration stores parent folders only. Installed skills and `installed.json` remain inside each repository. After a successful interactive install, Alson may ask whether to add the current repository's direct parent folder automatically.
+The configuration stores parent folders or repository roots only. Installed skills and `installed.json` remain inside each repository. After a successful interactive install, Alson may ask whether to add the current repository's direct parent folder automatically.
 
 Update the CLI separately when a CLI fix or feature is released:
 
@@ -181,7 +181,7 @@ alson delete project-intake
 - It does not execute skills. Skills run inside an agent tool that supports Agent Skills.
 - It does not install skills into your home directory. Skills are always repository-local.
 - It does not update the CLI when a skill is updated. CLI updates use npm.
-- It does not search nested repositories. Bulk discovery checks only direct children of configured parent folders.
+- It does not search nested repositories. Bulk discovery checks configured repository roots and direct children of configured folders.
 
 ## Safety
 

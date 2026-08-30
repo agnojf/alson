@@ -20,6 +20,19 @@ async function discoverRepositories(parents) {
     const issues = [];
     const seen = new Set();
     for (const parent of parents) {
+        if (await isRepository(parent)) {
+            try {
+                const root = await node_fs_1.default.promises.realpath(parent);
+                if (!seen.has(root)) {
+                    seen.add(root);
+                    repositories.push({ root, parent });
+                }
+            }
+            catch (err) {
+                const reason = err instanceof Error ? `: ${err.message}` : '';
+                issues.push({ parent, message: `unable to resolve repository ${parent}${reason}` });
+            }
+        }
         let entries;
         try {
             entries = await node_fs_1.default.promises.readdir(parent, { withFileTypes: true });

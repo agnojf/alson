@@ -31,6 +31,19 @@ export async function discoverRepositories(parents: string[]): Promise<Discovery
   const seen = new Set<string>();
 
   for (const parent of parents) {
+    if (await isRepository(parent)) {
+      try {
+        const root = await fs.promises.realpath(parent);
+        if (!seen.has(root)) {
+          seen.add(root);
+          repositories.push({ root, parent });
+        }
+      } catch (err) {
+        const reason = err instanceof Error ? `: ${err.message}` : '';
+        issues.push({ parent, message: `unable to resolve repository ${parent}${reason}` });
+      }
+    }
+
     let entries: fs.Dirent[];
     try {
       entries = await fs.promises.readdir(parent, { withFileTypes: true });

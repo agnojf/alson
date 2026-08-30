@@ -53,3 +53,13 @@ test('repository discovery: finds direct child repositories only and deduplicate
     fs.realpathSync(worktree)
   ]);
 });
+
+test('repository discovery: includes a configured path when it is itself a repository', async () => {
+  const repository = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-configured-repo-'));
+  fs.mkdirSync(path.join(repository, '.git'));
+
+  const result = await discoverRepositories([repository]);
+
+  assert.deepEqual(result.issues, []);
+  assert.deepEqual(result.repositories.map((item) => item.root), [fs.realpathSync(repository)]);
+});
