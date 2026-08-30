@@ -20,13 +20,16 @@ const version_js_1 = require("../util/version.js");
 const installed_js_1 = require("../state/installed.js");
 const safety_js_1 = require("./safety.js");
 const staging_js_1 = require("./staging.js");
-async function stagePackage(catalog, entry) {
+async function stagePackage(catalog, entry, opts, context) {
     const src = catalog.origin === 'remote' || catalog.origin === 'cache'
-        ? await (0, remote_js_1.materializeSkill)(entry, catalog.offline ?? false)
+        ? await (0, remote_js_1.materializeSkill)(entry, catalog.offline ?? false, {
+            context,
+            sharedPackages: opts.sharedPackages
+        })
         : node_path_1.default.join((0, catalog_js_1.bundledSkillsRoot)(), entry.name);
     const manifest = await (0, validate_js_1.validatePackage)(src, entry.name);
     void manifest;
-    const staged = node_path_1.default.join((0, paths_js_1.stagingDir)(), `${entry.name}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
+    const staged = node_path_1.default.join((0, paths_js_1.stagingDir)(context), `${entry.name}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
     await (0, staging_js_1.copyDirSafe)(src, staged);
     const stagedHash = await (0, hash_js_1.packageHash)(staged);
     if (stagedHash !== entry.hash) {
@@ -46,23 +49,23 @@ async function recordFor(entry, files) {
         ...(entry.source ? { source: entry.source } : {})
     };
 }
-async function installSkill(catalog, entry, opts) {
-    const dir = (0, safety_js_1.targetDir)(entry.name);
-    const state = await (0, installed_js_1.readState)();
+async function installSkill(catalog, entry, opts, context) {
+    const dir = (0, safety_js_1.targetDir)(entry.name, context);
+    const state = await (0, installed_js_1.readState)(context);
     const existing = state.installs[entry.name];
-    if ((0, safety_js_1.targetExists)(entry.name) && !existing && !opts.force) {
+    if ((0, safety_js_1.targetExists)(entry.name, context) && !existing && !opts.force) {
         throw new errors_js_1.AlsonError('Unmanaged', `${dir} already exists and is not manager-installed. Use --force to replace it`);
     }
-    const staged = await stagePackage(catalog, entry);
-    if ((0, safety_js_1.targetExists)(entry.name) && existing && !opts.force) {
+    const staged = await stagePackage(catalog, entry, opts, context);
+    if ((0, safety_js_1.targetExists)(entry.name, context) && existing && !opts.force) {
         const ok = await (0, io_js_1.confirm)(`${entry.name} is already installed (${existing.version}). Overwrite? (y/n)`);
         if (!ok) {
             await (0, io_js_1.removeIfExists)(staged);
             throw new errors_js_1.AlsonError('Usage', 'install cancelled');
         }
     }
-    const backup = node_path_1.default.join((0, paths_js_1.stagingDir)(), `${entry.name}-backup-${Date.now()}`);
-    const hadTarget = (0, safety_js_1.targetExists)(entry.name);
+    const backup = node_path_1.default.join((0, paths_js_1.stagingDir)(context), `${entry.name}-backup-${Date.now()}`);
+    const hadTarget = (0, safety_js_1.targetExists)(entry.name, context);
     if (hadTarget) {
         await node_fs_1.default.promises.rename(dir, backup);
     }
@@ -79,7 +82,7 @@ async function installSkill(catalog, entry, opts) {
     const files = await (0, hash_js_1.listFiles)(dir);
     state.installs[entry.name] = await recordFor(entry, files);
     try {
-        await (0, installed_js_1.writeState)(state);
+        await (0, installed_js_1.writeState)(state, context);
     }
     catch (err) {
         await (0, io_js_1.removeIfExists)(dir);
@@ -93,45 +96,45 @@ async function installSkill(catalog, entry, opts) {
     }
     return dir;
 }
-async function updateSkill(catalog, entry, opts) {
-    const state = await (0, installed_js_1.readState)();
+async function updateSkill(catalog, entry, opts, context) {
+    const state = await (0, installed_js_1.readState)(context);
     const existing = state.installs[entry.name];
     if (!existing) {
-        if ((0, safety_js_1.targetExists)(entry.name)) {
-            throw new errors_js_1.AlsonError('Unmanaged', `${(0, safety_js_1.targetDir)(entry.name)} is not manager-installed. Refusing to update it`);
+        if ((0, safety_js_1.targetExists)(entry.name, context)) {
+            throw new errors_js_1.AlsonError('Unmanaged', `${(0, safety_js_1.targetDir)(entry.name, context)} is not manager-installed. Refusing to update it`);
         }
         throw new errors_js_1.AlsonError('NotInstalled', `${entry.name} is not installed`);
     }
     if (!opts.force) {
-        await (0, safety_js_1.verifyUnmodified)(entry.name, existing, 'update');
+        await (0, safety_js_1.verifyUnmodified)(entry.name, existing, 'update', context);
     }
-    const dir = await installSkill(catalog, entry, { force: true });
+    const dir = await installSkill(catalog, entry, { force: true, sharedPackages: opts.sharedPackages }, context);
     return dir;
 }
-async function deleteSkill(entryName, opts) {
-    const state = await (0, installed_js_1.readState)();
+async function deleteSkill(entryName, opts, context) {
+    const state = await (0, installed_js_1.readState)(context);
     const record = state.installs[entryName];
-    const dir = (0, safety_js_1.targetDir)(entryName);
+    const dir = (0, safety_js_1.targetDir)(entryName, context);
     if (!record) {
-        if ((0, safety_js_1.targetExists)(entryName)) {
+        if ((0, safety_js_1.targetExists)(entryName, context)) {
             throw new errors_js_1.AlsonError('Unmanaged', `${dir} is not manager-installed. Refusing to delete it`);
         }
         throw new errors_js_1.AlsonError('NotInstalled', `${entryName} is not installed`);
     }
     if (!opts.force) {
-        await (0, safety_js_1.verifyUnmodified)(entryName, record, 'delete');
+        await (0, safety_js_1.verifyUnmodified)(entryName, record, 'delete', context);
         const ok = await (0, io_js_1.confirm)(`Delete ${entryName}@${record.version} from ${dir}? (y/n)`);
         if (!ok) {
             throw new errors_js_1.AlsonError('Usage', 'delete cancelled');
         }
     }
-    const backup = node_path_1.default.join((0, paths_js_1.stagingDir)(), `${entryName}-delete-${Date.now()}`);
-    if ((0, safety_js_1.targetExists)(entryName)) {
+    const backup = node_path_1.default.join((0, paths_js_1.stagingDir)(context), `${entryName}-delete-${Date.now()}`);
+    if ((0, safety_js_1.targetExists)(entryName, context)) {
         await node_fs_1.default.promises.rename(dir, backup);
     }
     delete state.installs[entryName];
     try {
-        await (0, installed_js_1.writeState)(state);
+        await (0, installed_js_1.writeState)(state, context);
     }
     catch (err) {
         await (0, io_js_1.removeIfExists)(dir);
@@ -143,8 +146,8 @@ async function deleteSkill(entryName, opts) {
     await (0, io_js_1.removeIfExists)(backup);
     return dir;
 }
-async function computeStatuses(catalog) {
-    const state = await (0, installed_js_1.readState)();
+async function computeStatuses(catalog, context) {
+    const state = await (0, installed_js_1.readState)(context);
     const cliVersion = await (0, safety_js_1.readCliVersion)();
     const rows = [];
     for (const entry of catalog.skills) {
@@ -155,15 +158,15 @@ async function computeStatuses(catalog) {
             status = 'incompatible';
         }
         else if (!record) {
-            status = (0, safety_js_1.targetExists)(entry.name) ? 'unmanaged' : 'not installed';
+            status = (0, safety_js_1.targetExists)(entry.name, context) ? 'unmanaged' : 'not installed';
         }
-        else if (!(0, safety_js_1.targetExists)(entry.name)) {
+        else if (!(0, safety_js_1.targetExists)(entry.name, context)) {
             status = 'not installed';
             installedVersion = record.version;
         }
         else {
             installedVersion = record.version;
-            const hash = await (0, hash_js_1.packageHash)((0, safety_js_1.targetDir)(entry.name));
+            const hash = await (0, hash_js_1.packageHash)((0, safety_js_1.targetDir)(entry.name, context));
             if (hash !== record.hash) {
                 status = 'modified';
             }

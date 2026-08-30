@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { AlsonError } from '../errors.js';
 import { atomicWriteFile } from '../util/io.js';
-import { stateFile } from '../util/paths.js';
+import { stateFile, type RepositoryContext } from '../util/paths.js';
 
 export interface InstallRecord {
   name: string;
@@ -20,8 +20,8 @@ export interface State {
 
 export const EMPTY_STATE: State = { version: 1, installs: {} };
 
-export async function readState(): Promise<State> {
-  const file = stateFile();
+export async function readState(context?: RepositoryContext): Promise<State> {
+  const file = stateFile(context);
   let raw: string;
   try {
     raw = await fs.promises.readFile(file, 'utf8');
@@ -48,6 +48,6 @@ export async function readState(): Promise<State> {
   }
 }
 
-export async function writeState(state: State): Promise<void> {
-  await atomicWriteFile(stateFile(), JSON.stringify(state, null, 2) + '\n');
+export async function writeState(state: State, context?: RepositoryContext): Promise<void> {
+  await atomicWriteFile(stateFile(context), JSON.stringify(state, null, 2) + '\n');
 }

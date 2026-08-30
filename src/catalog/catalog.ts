@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { AlsonError } from '../errors.js';
 import { atomicWriteFile } from '../util/io.js';
-import { catalogCacheFile, findPackageRoot } from '../util/paths.js';
+import { catalogCacheFile, findPackageRoot, type RepositoryContext } from '../util/paths.js';
 import { readResource } from '../util/net.js';
 
 export interface CatalogEntry {
@@ -25,6 +25,8 @@ export interface Catalog {
 
 export interface CatalogOptions {
   offline?: boolean;
+  context?: RepositoryContext;
+  cache?: boolean;
 }
 
 export const DEFAULT_CATALOG_URL =
@@ -127,9 +129,9 @@ function remoteEntries(catalog: Catalog, catalogUrl: string): Catalog {
   };
 }
 
-async function readCachedCatalog(): Promise<Catalog | undefined> {
+async function readCachedCatalog(context?: RepositoryContext): Promise<Catalog | undefined> {
   try {
-    return await readCatalogFile(catalogCacheFile());
+    return await readCatalogFile(catalogCacheFile(context));
   } catch {
     return undefined;
   }
@@ -144,7 +146,7 @@ export async function loadCatalog(options: CatalogOptions = {}): Promise<Catalog
   const offline = offlineMode(options);
   const catalogUrl = process.env.ALSON_CATALOG_URL ?? DEFAULT_CATALOG_URL;
   if (offline) {
-    const cached = await readCachedCatalog();
+    const cached = await readCachedCatalog(options.context);
     if (cached) {
       return { ...remoteEntries(cached, catalogUrl), origin: 'cache', offline: true };
     }
@@ -160,17 +162,19 @@ export async function loadCatalog(options: CatalogOptions = {}): Promise<Catalog
   try {
     const raw = (await readResource(catalogUrl)).toString('utf8');
     const remote = remoteEntries(parseCatalog(raw, catalogUrl), catalogUrl);
-    try {
-      await atomicWriteFile(catalogCacheFile(), raw);
-    } catch {
-      // The catalog remains usable when the repository cache cannot be written.
+    if (options.cache !== false) {
+      try {
+        await atomicWriteFile(catalogCacheFile(options.context), raw);
+      } catch {
+        // The catalog remains usable when the repository cache cannot be written.
+      }
     }
     return { ...remote, origin: 'remote', offline: false };
   } catch (err) {
     if (err instanceof AlsonError && err.code === 'CatalogMissing') {
       throw err;
     }
-    const cached = await readCachedCatalog();
+    const cached = await readCachedCatalog(options.context);
     if (cached) {
       return { ...remoteEntries(cached, catalogUrl), origin: 'cache', offline: true };
     }

@@ -84,6 +84,38 @@ Use `--offline` to use only the local catalog, package cache, and CLI bundle:
 alson update project-intake --offline
 ```
 
+### Update Skills Across Repositories
+
+Configure each parent folder once. Alson discovers repositories that are direct children of those folders.
+
+```bash
+alson repos add ~/Documents/GitHub
+alson repos add ~/Work/Repositories
+alson repos list
+```
+
+Preview all eligible updates:
+
+```bash
+alson update --all-repositories --dry-run
+```
+
+Apply them with one confirmation:
+
+```bash
+alson update --all-repositories
+```
+
+Use `--yes` for a non-interactive run:
+
+```bash
+alson update --all-repositories --yes
+```
+
+The bulk command updates every installed skill with a newer catalog version. It reports current repositories, repositories with no Alson-managed skills, blocked local changes, and failures. It continues after a problem in one repository. `--force` is required to replace a locally changed skill.
+
+The configuration stores parent folders only. Installed skills and `installed.json` remain inside each repository. After a successful interactive install, Alson may ask whether to add the current repository's direct parent folder automatically.
+
 Update the CLI separately when a CLI fix or feature is released:
 
 ```bash
@@ -126,6 +158,10 @@ alson install <skill>          Install an available skill
 alson delete <skill>           Remove an installed skill
 alson update [skill]           Update installed skills to available versions
 alson update --all             Update every installed skill
+alson update --all-repositories Update eligible skills in all configured repositories
+alson repos add <folder>       Add a parent folder for bulk updates
+alson repos remove <folder>    Remove a bulk update parent folder
+alson repos list               List bulk update parent folders
 alson --offline <command>      Use only the local catalog, cache, and CLI bundle
 alson --version                Print the CLI version
 ```
@@ -145,6 +181,7 @@ alson delete project-intake
 - It does not execute skills. Skills run inside an agent tool that supports Agent Skills.
 - It does not install skills into your home directory. Skills are always repository-local.
 - It does not update the CLI when a skill is updated. CLI updates use npm.
+- It does not search nested repositories. Bulk discovery checks only direct children of configured parent folders.
 
 ## Safety
 

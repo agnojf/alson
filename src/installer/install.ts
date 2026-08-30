@@ -7,20 +7,31 @@ import { materializeSkill } from '../catalog/remote.js';
 import { validatePackage } from '../catalog/validate.js';
 import { packageHash, listFiles } from '../util/hash.js';
 import { confirm, dirExists, removeIfExists } from '../util/io.js';
-import { stagingDir } from '../util/paths.js';
+import { stagingDir, type RepositoryContext } from '../util/paths.js';
 import { compareVersions } from '../util/version.js';
 import { readState, writeState, type InstallRecord } from '../state/installed.js';
 import { readCliVersion, targetDir, targetExists, verifyUnmodified } from './safety.js';
 import { copyDirSafe } from './staging.js';
 
-async function stagePackage(catalog: Catalog, entry: CatalogEntry): Promise<string> {
+async function stagePackage(
+  catalog: Catalog,
+  entry: CatalogEntry,
+  opts: InstallOptions,
+  context?: RepositoryContext
+): Promise<string> {
   const src =
     catalog.origin === 'remote' || catalog.origin === 'cache'
-      ? await materializeSkill(entry, catalog.offline ?? false)
+      ? await materializeSkill(entry, catalog.offline ?? false, {
+          context,
+          sharedPackages: opts.sharedPackages
+        })
       : path.join(bundledSkillsRoot(), entry.name);
   const manifest = await validatePackage(src, entry.name);
   void manifest;
-  const staged = path.join(stagingDir(), `${entry.name}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
+  const staged = path.join(
+    stagingDir(context),
+    `${entry.name}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
+  );
   await copyDirSafe(src, staged);
   const stagedHash = await packageHash(staged);
   if (stagedHash !== entry.hash) {
@@ -44,23 +55,29 @@ async function recordFor(entry: CatalogEntry, files: string[]): Promise<InstallR
 
 export interface InstallOptions {
   force: boolean;
+  sharedPackages?: Map<string, Promise<string>>;
 }
 
-export async function installSkill(catalog: Catalog, entry: CatalogEntry, opts: InstallOptions): Promise<string> {
-  const dir = targetDir(entry.name);
-  const state = await readState();
+export async function installSkill(
+  catalog: Catalog,
+  entry: CatalogEntry,
+  opts: InstallOptions,
+  context?: RepositoryContext
+): Promise<string> {
+  const dir = targetDir(entry.name, context);
+  const state = await readState(context);
   const existing = state.installs[entry.name];
 
-  if (targetExists(entry.name) && !existing && !opts.force) {
+  if (targetExists(entry.name, context) && !existing && !opts.force) {
     throw new AlsonError(
       'Unmanaged',
       `${dir} already exists and is not manager-installed. Use --force to replace it`
     );
   }
 
-  const staged = await stagePackage(catalog, entry);
+  const staged = await stagePackage(catalog, entry, opts, context);
 
-  if (targetExists(entry.name) && existing && !opts.force) {
+  if (targetExists(entry.name, context) && existing && !opts.force) {
     const ok = await confirm(`${entry.name} is already installed (${existing.version}). Overwrite? (y/n)`);
     if (!ok) {
       await removeIfExists(staged);
@@ -68,8 +85,8 @@ export async function installSkill(catalog: Catalog, entry: CatalogEntry, opts: 
     }
   }
 
-  const backup = path.join(stagingDir(), `${entry.name}-backup-${Date.now()}`);
-  const hadTarget = targetExists(entry.name);
+  const backup = path.join(stagingDir(context), `${entry.name}-backup-${Date.now()}`);
+  const hadTarget = targetExists(entry.name, context);
   if (hadTarget) {
     await fs.promises.rename(dir, backup);
   }
@@ -86,7 +103,7 @@ export async function installSkill(catalog: Catalog, entry: CatalogEntry, opts: 
   const files = await listFiles(dir);
   state.installs[entry.name] = await recordFor(entry, files);
   try {
-    await writeState(state);
+    await writeState(state, context);
   } catch (err) {
     await removeIfExists(dir);
     if (hadTarget) {
@@ -100,20 +117,28 @@ export async function installSkill(catalog: Catalog, entry: CatalogEntry, opts: 
   return dir;
 }
 
-export async function updateSkill(catalog: Catalog, entry: CatalogEntry, opts: InstallOptions): Promise<string> {
-  const state = await readState();
+export async function updateSkill(
+  catalog: Catalog,
+  entry: CatalogEntry,
+  opts: InstallOptions,
+  context?: RepositoryContext
+): Promise<string> {
+  const state = await readState(context);
   const existing = state.installs[entry.name];
   if (!existing) {
-    if (targetExists(entry.name)) {
-      throw new AlsonError('Unmanaged', `${targetDir(entry.name)} is not manager-installed. Refusing to update it`);
+    if (targetExists(entry.name, context)) {
+      throw new AlsonError(
+        'Unmanaged',
+        `${targetDir(entry.name, context)} is not manager-installed. Refusing to update it`
+      );
     }
     throw new AlsonError('NotInstalled', `${entry.name} is not installed`);
   }
   if (!opts.force) {
-    await verifyUnmodified(entry.name, existing, 'update');
+    await verifyUnmodified(entry.name, existing, 'update', context);
   }
 
-  const dir = await installSkill(catalog, entry, { force: true });
+  const dir = await installSkill(catalog, entry, { force: true, sharedPackages: opts.sharedPackages }, context);
   return dir;
 }
 
@@ -121,31 +146,35 @@ export interface DeleteOptions {
   force: boolean;
 }
 
-export async function deleteSkill(entryName: string, opts: DeleteOptions): Promise<string> {
-  const state = await readState();
+export async function deleteSkill(
+  entryName: string,
+  opts: DeleteOptions,
+  context?: RepositoryContext
+): Promise<string> {
+  const state = await readState(context);
   const record = state.installs[entryName];
-  const dir = targetDir(entryName);
+  const dir = targetDir(entryName, context);
   if (!record) {
-    if (targetExists(entryName)) {
+    if (targetExists(entryName, context)) {
       throw new AlsonError('Unmanaged', `${dir} is not manager-installed. Refusing to delete it`);
     }
     throw new AlsonError('NotInstalled', `${entryName} is not installed`);
   }
   if (!opts.force) {
-    await verifyUnmodified(entryName, record, 'delete');
+    await verifyUnmodified(entryName, record, 'delete', context);
     const ok = await confirm(`Delete ${entryName}@${record.version} from ${dir}? (y/n)`);
     if (!ok) {
       throw new AlsonError('Usage', 'delete cancelled');
     }
   }
 
-  const backup = path.join(stagingDir(), `${entryName}-delete-${Date.now()}`);
-  if (targetExists(entryName)) {
+  const backup = path.join(stagingDir(context), `${entryName}-delete-${Date.now()}`);
+  if (targetExists(entryName, context)) {
     await fs.promises.rename(dir, backup);
   }
   delete state.installs[entryName];
   try {
-    await writeState(state);
+    await writeState(state, context);
   } catch (err) {
     await removeIfExists(dir);
     if (dirExists(backup)) {
@@ -165,8 +194,11 @@ export interface SkillStatus {
   status: string;
 }
 
-export async function computeStatuses(catalog: Catalog): Promise<SkillStatus[]> {
-  const state = await readState();
+export async function computeStatuses(
+  catalog: Catalog,
+  context?: RepositoryContext
+): Promise<SkillStatus[]> {
+  const state = await readState(context);
   const cliVersion = await readCliVersion();
   const rows: SkillStatus[] = [];
   for (const entry of catalog.skills) {
@@ -176,13 +208,13 @@ export async function computeStatuses(catalog: Catalog): Promise<SkillStatus[]> 
     if (entry.minCliVersion && compareVersions(cliVersion, entry.minCliVersion) < 0) {
       status = 'incompatible';
     } else if (!record) {
-      status = targetExists(entry.name) ? 'unmanaged' : 'not installed';
-    } else if (!targetExists(entry.name)) {
+      status = targetExists(entry.name, context) ? 'unmanaged' : 'not installed';
+    } else if (!targetExists(entry.name, context)) {
       status = 'not installed';
       installedVersion = record.version;
     } else {
       installedVersion = record.version;
-      const hash = await packageHash(targetDir(entry.name));
+      const hash = await packageHash(targetDir(entry.name, context));
       if (hash !== record.hash) {
         status = 'modified';
       } else if (compareVersions(record.version, entry.version) < 0) {

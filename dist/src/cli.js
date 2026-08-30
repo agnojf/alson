@@ -7,6 +7,7 @@ const search_js_1 = require("./commands/search.js");
 const install_js_1 = require("./commands/install.js");
 const delete_js_1 = require("./commands/delete.js");
 const update_js_1 = require("./commands/update.js");
+const repos_js_1 = require("./commands/repos.js");
 const safety_js_1 = require("./installer/safety.js");
 const HELP = `alson - search, install, delete, and update agent skills
 
@@ -17,6 +18,10 @@ Usage:
   alson delete <skill>           Remove an installed skill
   alson update [skill]           Update installed skills to available versions
   alson update --all             Update every installed skill
+  alson update --all-repositories Update eligible skills in all configured repositories
+  alson repos add <folder>       Add a parent folder for bulk updates
+  alson repos remove <folder>    Remove a bulk update parent folder
+  alson repos list               List bulk update parent folders
   alson --offline <command>      Use only the local catalog and cache
   alson --version                Print the CLI version
   alson --help                   Show this help
@@ -24,6 +29,8 @@ Usage:
 Options:
   --force   Bypass safety checks and confirmations
   --offline Do not access the network
+  --dry-run Preview bulk updates without changing files
+  --yes     Skip bulk update confirmation
 `;
 async function main() {
     let values;
@@ -35,7 +42,10 @@ async function main() {
                 version: { type: 'boolean' },
                 force: { type: 'boolean', short: 'f' },
                 all: { type: 'boolean' },
-                offline: { type: 'boolean' }
+                offline: { type: 'boolean' },
+                'all-repositories': { type: 'boolean' },
+                'dry-run': { type: 'boolean' },
+                yes: { type: 'boolean' }
             },
             allowPositionals: true,
             strict: true
@@ -55,6 +65,13 @@ async function main() {
         return;
     }
     const [command, ...rest] = positionals;
+    const hasBulkOption = !!values['all-repositories'] || !!values['dry-run'] || !!values.yes;
+    if (hasBulkOption && command !== 'update') {
+        throw new errors_js_1.AlsonError('Usage', 'bulk update options require the update command. Run alson --help for usage');
+    }
+    if ((values['dry-run'] || values.yes) && !values['all-repositories']) {
+        throw new errors_js_1.AlsonError('Usage', 'bulk update options require --all-repositories. Run alson --help for usage');
+    }
     switch (command) {
         case undefined:
             process.stdout.write(HELP);
@@ -86,10 +103,16 @@ async function main() {
                 skill: rest[0],
                 all: !!values.all,
                 force: !!values.force,
-                offline: !!values.offline
+                offline: !!values.offline,
+                allRepositories: !!values['all-repositories'],
+                dryRun: !!values['dry-run'],
+                yes: !!values.yes
             });
             return;
         }
+        case 'repos':
+            await (0, repos_js_1.runRepos)(rest[0], rest[1]);
+            return;
         default:
             throw new errors_js_1.AlsonError('UnknownCommand', `unknown command "${command}". Run alson --help for usage`);
     }

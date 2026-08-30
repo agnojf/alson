@@ -101,9 +101,9 @@ function remoteEntries(catalog, catalogUrl) {
         }))
     };
 }
-async function readCachedCatalog() {
+async function readCachedCatalog(context) {
     try {
-        return await readCatalogFile((0, paths_js_1.catalogCacheFile)());
+        return await readCatalogFile((0, paths_js_1.catalogCacheFile)(context));
     }
     catch {
         return undefined;
@@ -117,7 +117,7 @@ async function loadCatalog(options = {}) {
     const offline = offlineMode(options);
     const catalogUrl = process.env.ALSON_CATALOG_URL ?? exports.DEFAULT_CATALOG_URL;
     if (offline) {
-        const cached = await readCachedCatalog();
+        const cached = await readCachedCatalog(options.context);
         if (cached) {
             return { ...remoteEntries(cached, catalogUrl), origin: 'cache', offline: true };
         }
@@ -129,11 +129,13 @@ async function loadCatalog(options = {}) {
     try {
         const raw = (await (0, net_js_1.readResource)(catalogUrl)).toString('utf8');
         const remote = remoteEntries(parseCatalog(raw, catalogUrl), catalogUrl);
-        try {
-            await (0, io_js_1.atomicWriteFile)((0, paths_js_1.catalogCacheFile)(), raw);
-        }
-        catch {
-            // The catalog remains usable when the repository cache cannot be written.
+        if (options.cache !== false) {
+            try {
+                await (0, io_js_1.atomicWriteFile)((0, paths_js_1.catalogCacheFile)(options.context), raw);
+            }
+            catch {
+                // The catalog remains usable when the repository cache cannot be written.
+            }
         }
         return { ...remote, origin: 'remote', offline: false };
     }
@@ -141,7 +143,7 @@ async function loadCatalog(options = {}) {
         if (err instanceof errors_js_1.AlsonError && err.code === 'CatalogMissing') {
             throw err;
         }
-        const cached = await readCachedCatalog();
+        const cached = await readCachedCatalog(options.context);
         if (cached) {
             return { ...remoteEntries(cached, catalogUrl), origin: 'cache', offline: true };
         }

@@ -1,6 +1,6 @@
 {
   "name": "@agnojf/alson",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "CLI to search, install, delete, and update agent skills on your machine",
   "license": "MIT",
   "repository": {

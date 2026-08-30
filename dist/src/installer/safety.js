@@ -13,14 +13,14 @@ const errors_js_1 = require("../errors.js");
 const hash_js_1 = require("../util/hash.js");
 const io_js_1 = require("../util/io.js");
 const paths_js_1 = require("../util/paths.js");
-function targetDir(name) {
-    return node_path_1.default.join((0, paths_js_1.skillsDir)(), name);
+function targetDir(name, context) {
+    return node_path_1.default.join((0, paths_js_1.skillsDir)(context), name);
 }
-function targetExists(name) {
-    return (0, io_js_1.dirExists)(targetDir(name));
+function targetExists(name, context) {
+    return (0, io_js_1.dirExists)(targetDir(name, context));
 }
-async function verifyUnmodified(name, record, action) {
-    const dir = targetDir(name);
+async function verifyUnmodified(name, record, action, context) {
+    const dir = targetDir(name, context);
     if (!(0, io_js_1.dirExists)(dir)) {
         return;
     }

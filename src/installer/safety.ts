@@ -3,19 +3,24 @@ import path from 'node:path';
 import { AlsonError } from '../errors.js';
 import { packageHash } from '../util/hash.js';
 import { dirExists } from '../util/io.js';
-import { findPackageRoot, skillsDir } from '../util/paths.js';
+import { findPackageRoot, skillsDir, type RepositoryContext } from '../util/paths.js';
 import type { InstallRecord } from '../state/installed.js';
 
-export function targetDir(name: string): string {
-  return path.join(skillsDir(), name);
+export function targetDir(name: string, context?: RepositoryContext): string {
+  return path.join(skillsDir(context), name);
 }
 
-export function targetExists(name: string): boolean {
-  return dirExists(targetDir(name));
+export function targetExists(name: string, context?: RepositoryContext): boolean {
+  return dirExists(targetDir(name, context));
 }
 
-export async function verifyUnmodified(name: string, record: InstallRecord, action: 'delete' | 'update'): Promise<void> {
-  const dir = targetDir(name);
+export async function verifyUnmodified(
+  name: string,
+  record: InstallRecord,
+  action: 'delete' | 'update',
+  context?: RepositoryContext
+): Promise<void> {
+  const dir = targetDir(name, context);
   if (!dirExists(dir)) {
     return;
   }

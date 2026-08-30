@@ -19,6 +19,13 @@ After the push, users with internet access run:
 alson update <name>
 ```
 
+To update an existing skill across configured repositories, users run:
+
+```bash
+alson update --all-repositories --dry-run
+alson update --all-repositories
+```
+
 ## New Skill
 
 Add the complete package under `skills/<name>/` with `SKILL.md` and `skill.json`. Run the same build and verification steps. Users run `alson install <name>` after the catalog is published.
@@ -26,6 +33,8 @@ Add the complete package under `skills/<name>/` with `SKILL.md` and `skill.json`
 ## CLI Update
 
 When `src/` changes, bump the CLI version in `package.json` and `package-lock.json`. Run the full verification suite, commit the generated runtime files, create a matching Git tag, and push the commit and tag.
+
+For the multi-repository update feature, pilot the new CLI against one parent folder containing existing repositories. Confirm the dry-run output, one confirmation prompt, local-change protection, and failure isolation before publishing the CLI tag.
 
 ## Release Boundary
 

@@ -11,8 +11,8 @@ const errors_js_1 = require("../errors.js");
 const io_js_1 = require("../util/io.js");
 const paths_js_1 = require("../util/paths.js");
 exports.EMPTY_STATE = { version: 1, installs: {} };
-async function readState() {
-    const file = (0, paths_js_1.stateFile)();
+async function readState(context) {
+    const file = (0, paths_js_1.stateFile)(context);
     let raw;
     try {
         raw = await node_fs_1.default.promises.readFile(file, 'utf8');
@@ -38,6 +38,6 @@ async function readState() {
         throw new errors_js_1.AlsonError('StateCorrupt', `installed state is corrupt at ${file}. Fix or remove it, then retry`);
     }
 }
-async function writeState(state) {
-    await (0, io_js_1.atomicWriteFile)((0, paths_js_1.stateFile)(), JSON.stringify(state, null, 2) + '\n');
+async function writeState(state, context) {
+    await (0, io_js_1.atomicWriteFile)((0, paths_js_1.stateFile)(context), JSON.stringify(state, null, 2) + '\n');
 }

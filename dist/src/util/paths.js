@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.repoRoot = repoRoot;
+exports.contextForRoot = contextForRoot;
+exports.currentContext = currentContext;
 exports.baseDir = baseDir;
 exports.skillsDir = skillsDir;
 exports.stateDir = stateDir;
@@ -16,8 +18,8 @@ exports.findPackageRoot = findPackageRoot;
 const node_fs_1 = __importDefault(require("node:fs"));
 const node_path_1 = __importDefault(require("node:path"));
 const errors_js_1 = require("../errors.js");
-function repoRoot() {
-    let dir = node_path_1.default.resolve(process.cwd());
+function repoRoot(from = process.cwd()) {
+    let dir = node_path_1.default.resolve(from);
     for (;;) {
         if (node_fs_1.default.existsSync(node_path_1.default.join(dir, '.git'))) {
             return dir;
@@ -29,29 +31,35 @@ function repoRoot() {
         dir = parent;
     }
 }
-function baseDir() {
-    return process.env.ALSON_HOME || repoRoot();
+function contextForRoot(root) {
+    return { root: node_path_1.default.resolve(root) };
 }
-function skillsDir() {
-    return node_path_1.default.join(baseDir(), '.agents', 'skills');
+function currentContext() {
+    return contextForRoot(process.env.ALSON_HOME || repoRoot());
 }
-function stateDir() {
-    return node_path_1.default.join(baseDir(), '.agents', 'alson');
+function baseDir(context = currentContext()) {
+    return context.root;
 }
-function stateFile() {
-    return node_path_1.default.join(stateDir(), 'installed.json');
+function skillsDir(context) {
+    return node_path_1.default.join(baseDir(context), '.agents', 'skills');
 }
-function stagingDir() {
-    return node_path_1.default.join(stateDir(), 'staging');
+function stateDir(context) {
+    return node_path_1.default.join(baseDir(context), '.agents', 'alson');
 }
-function cacheDir() {
-    return node_path_1.default.join(stateDir(), 'cache');
+function stateFile(context) {
+    return node_path_1.default.join(stateDir(context), 'installed.json');
 }
-function catalogCacheFile() {
-    return node_path_1.default.join(cacheDir(), 'catalog.json');
+function stagingDir(context) {
+    return node_path_1.default.join(stateDir(context), 'staging');
 }
-function skillCacheDir(name, version, hash) {
-    return node_path_1.default.join(cacheDir(), 'skills', name, `${version}-${hash}`);
+function cacheDir(context) {
+    return node_path_1.default.join(stateDir(context), 'cache');
+}
+function catalogCacheFile(context) {
+    return node_path_1.default.join(cacheDir(context), 'catalog.json');
+}
+function skillCacheDir(name, version, hash, context) {
+    return node_path_1.default.join(cacheDir(context), 'skills', name, `${version}-${hash}`);
 }
 function findPackageRoot(from) {
     let dir = node_path_1.default.resolve(from);

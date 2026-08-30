@@ -49,8 +49,8 @@ async function validCache(dir, entry) {
         return false;
     }
 }
-async function materializeSkill(entry, offline) {
-    const cache = (0, paths_js_1.skillCacheDir)(entry.name, entry.version, entry.hash);
+async function materializeToCache(entry, offline, context) {
+    const cache = (0, paths_js_1.skillCacheDir)(entry.name, entry.version, entry.hash, context);
     if (await validCache(cache, entry)) {
         return cache;
     }
@@ -107,4 +107,41 @@ async function materializeSkill(entry, offline) {
         const reason = err instanceof Error ? err.message : String(err);
         throw new errors_js_1.AlsonError('SkillUnavailable', `unable to cache ${entry.name}@${entry.version}: ${reason}`);
     }
+}
+async function copyToCache(source, cache) {
+    const temporary = `${cache}.tmp-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    await (0, io_js_1.removeIfExists)(temporary);
+    try {
+        await node_fs_1.default.promises.mkdir(node_path_1.default.dirname(cache), { recursive: true });
+        await node_fs_1.default.promises.cp(source, temporary, { recursive: true });
+        await (0, io_js_1.removeIfExists)(cache);
+        await node_fs_1.default.promises.rename(temporary, cache);
+        return cache;
+    }
+    catch (err) {
+        await (0, io_js_1.removeIfExists)(temporary);
+        throw err;
+    }
+}
+async function materializeSkill(entry, offline, options = {}) {
+    const cache = (0, paths_js_1.skillCacheDir)(entry.name, entry.version, entry.hash, options.context);
+    if (options.sharedPackages) {
+        const key = `${entry.name}@${entry.version}:${entry.hash}`;
+        let shared = options.sharedPackages.get(key);
+        if (!shared) {
+            shared = (await validCache(cache, entry))
+                ? Promise.resolve(cache)
+                : materializeToCache(entry, offline, options.context);
+            options.sharedPackages.set(key, shared);
+        }
+        const source = await shared;
+        if (source === cache) {
+            return source;
+        }
+        return copyToCache(source, cache);
+    }
+    if (await validCache(cache, entry)) {
+        return cache;
+    }
+    return materializeToCache(entry, offline, options.context);
 }

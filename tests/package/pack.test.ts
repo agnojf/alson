@@ -72,6 +72,8 @@ test('package: a fresh install of the tarball runs alson --help', () => {
     encoding: 'utf8'
   });
   assert.match(help, /alson - search, install, delete, and update agent skills/);
+  assert.match(help, /update --all-repositories/);
+  assert.match(help, /repos add <folder>/);
 
   const list = execFileSync(process.execPath, [path.join(prefix, 'node_modules', '.bin', 'alson'), 'list'], {
     env: { ...process.env, ALSON_HOME: home, ALSON_OFFLINE: '1' },

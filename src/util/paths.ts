@@ -2,8 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { AlsonError } from '../errors.js';
 
-export function repoRoot(): string {
-  let dir = path.resolve(process.cwd());
+export interface RepositoryContext {
+  root: string;
+}
+
+export function repoRoot(from: string = process.cwd()): string {
+  let dir = path.resolve(from);
   for (;;) {
     if (fs.existsSync(path.join(dir, '.git'))) {
       return dir;
@@ -19,36 +23,49 @@ export function repoRoot(): string {
   }
 }
 
-export function baseDir(): string {
-  return process.env.ALSON_HOME || repoRoot();
+export function contextForRoot(root: string): RepositoryContext {
+  return { root: path.resolve(root) };
 }
 
-export function skillsDir(): string {
-  return path.join(baseDir(), '.agents', 'skills');
+export function currentContext(): RepositoryContext {
+  return contextForRoot(process.env.ALSON_HOME || repoRoot());
 }
 
-export function stateDir(): string {
-  return path.join(baseDir(), '.agents', 'alson');
+export function baseDir(context: RepositoryContext = currentContext()): string {
+  return context.root;
 }
 
-export function stateFile(): string {
-  return path.join(stateDir(), 'installed.json');
+export function skillsDir(context?: RepositoryContext): string {
+  return path.join(baseDir(context), '.agents', 'skills');
 }
 
-export function stagingDir(): string {
-  return path.join(stateDir(), 'staging');
+export function stateDir(context?: RepositoryContext): string {
+  return path.join(baseDir(context), '.agents', 'alson');
 }
 
-export function cacheDir(): string {
-  return path.join(stateDir(), 'cache');
+export function stateFile(context?: RepositoryContext): string {
+  return path.join(stateDir(context), 'installed.json');
 }
 
-export function catalogCacheFile(): string {
-  return path.join(cacheDir(), 'catalog.json');
+export function stagingDir(context?: RepositoryContext): string {
+  return path.join(stateDir(context), 'staging');
 }
 
-export function skillCacheDir(name: string, version: string, hash: string): string {
-  return path.join(cacheDir(), 'skills', name, `${version}-${hash}`);
+export function cacheDir(context?: RepositoryContext): string {
+  return path.join(stateDir(context), 'cache');
+}
+
+export function catalogCacheFile(context?: RepositoryContext): string {
+  return path.join(cacheDir(context), 'catalog.json');
+}
+
+export function skillCacheDir(
+  name: string,
+  version: string,
+  hash: string,
+  context?: RepositoryContext
+): string {
+  return path.join(cacheDir(context), 'skills', name, `${version}-${hash}`);
 }
 
 export function findPackageRoot(from: string): string {

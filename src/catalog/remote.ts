@@ -4,7 +4,7 @@ import { AlsonError } from '../errors.js';
 import { packageHash } from '../util/hash.js';
 import { dirExists, removeIfExists } from '../util/io.js';
 import { readResource } from '../util/net.js';
-import { skillCacheDir } from '../util/paths.js';
+import { skillCacheDir, type RepositoryContext } from '../util/paths.js';
 import { isSafeRelativePath, validatePackage } from './validate.js';
 import type { CatalogEntry } from './catalog.js';
 
@@ -49,8 +49,12 @@ async function validCache(dir: string, entry: CatalogEntry): Promise<boolean> {
   }
 }
 
-export async function materializeSkill(entry: CatalogEntry, offline: boolean): Promise<string> {
-  const cache = skillCacheDir(entry.name, entry.version, entry.hash);
+async function materializeToCache(
+  entry: CatalogEntry,
+  offline: boolean,
+  context?: RepositoryContext
+): Promise<string> {
+  const cache = skillCacheDir(entry.name, entry.version, entry.hash, context);
   if (await validCache(cache, entry)) {
     return cache;
   }
@@ -122,4 +126,52 @@ export async function materializeSkill(entry: CatalogEntry, offline: boolean): P
       `unable to cache ${entry.name}@${entry.version}: ${reason}`
     );
   }
+}
+
+async function copyToCache(source: string, cache: string): Promise<string> {
+  const temporary = `${cache}.tmp-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  await removeIfExists(temporary);
+  try {
+    await fs.promises.mkdir(path.dirname(cache), { recursive: true });
+    await fs.promises.cp(source, temporary, { recursive: true });
+    await removeIfExists(cache);
+    await fs.promises.rename(temporary, cache);
+    return cache;
+  } catch (err) {
+    await removeIfExists(temporary);
+    throw err;
+  }
+}
+
+export interface MaterializeOptions {
+  context?: RepositoryContext;
+  sharedPackages?: Map<string, Promise<string>>;
+}
+
+export async function materializeSkill(
+  entry: CatalogEntry,
+  offline: boolean,
+  options: MaterializeOptions = {}
+): Promise<string> {
+  const cache = skillCacheDir(entry.name, entry.version, entry.hash, options.context);
+  if (options.sharedPackages) {
+    const key = `${entry.name}@${entry.version}:${entry.hash}`;
+    let shared = options.sharedPackages.get(key);
+    if (!shared) {
+      shared = (await validCache(cache, entry))
+        ? Promise.resolve(cache)
+        : materializeToCache(entry, offline, options.context);
+      options.sharedPackages.set(key, shared);
+    }
+    const source = await shared;
+    if (source === cache) {
+      return source;
+    }
+    return copyToCache(source, cache);
+  }
+
+  if (await validCache(cache, entry)) {
+    return cache;
+  }
+  return materializeToCache(entry, offline, options.context);
 }

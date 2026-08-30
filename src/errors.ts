@@ -13,6 +13,7 @@ export type ErrorCode =
   | 'CatalogUnavailable'
   | 'SkillUnavailable'
   | 'IntegrityMismatch'
+  | 'ConfigCorrupt'
   | 'Usage';
 
 export class AlsonError extends Error {
