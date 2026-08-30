@@ -157,9 +157,11 @@ async function planRepository(
 
       const modifiedWithUpdate =
         row.status === 'modified' && compareVersions(record.version, entry.version) < 0;
+      const forceModified = args.force && row.status === 'modified';
       if (
         row.status === 'update available' ||
         modifiedWithUpdate ||
+        forceModified ||
         (args.all && (row.status === 'current' || row.status === 'modified'))
       ) {
         plan.updates.push({ root: repository.root, name: row.name, from: record.version, entry, context });

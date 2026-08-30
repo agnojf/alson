@@ -181,6 +181,35 @@ test('integration: bulk update previews, confirms once, and isolates repositorie
   assert.equal(fs.existsSync(path.join(emptyRepo, '.agents')), false);
 });
 
+test('integration: force replaces modified current skills across repositories', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-bulk-force-current-'));
+  const configHome = path.join(root, 'config');
+  const parent = path.join(root, 'repositories');
+  const remoteRoot = path.join(root, 'remote');
+  const catalogFile = path.join(remoteRoot, 'catalog.json');
+  fs.mkdirSync(parent, { recursive: true });
+  fs.mkdirSync(remoteRoot, { recursive: true });
+
+  const repoA = makeRepo(parent, 'repo-a');
+  const repoB = makeRepo(parent, 'repo-b');
+  const packageVersion = await writeSkillPackage(remoteRoot, '1.0.0', 'Version one.');
+  await writeCatalog(catalogFile, remoteRoot, '1.0.0', packageVersion.hash, packageVersion.files);
+  const catalogUrl = pathToFileURL(catalogFile).toString();
+
+  assert.equal(run(['repos', 'add', parent], root, configHome, catalogUrl).status, 0);
+  assert.equal(run(['install', 'demo-skill'], repoA, configHome, catalogUrl).status, 0);
+  assert.equal(run(['install', 'demo-skill'], repoB, configHome, catalogUrl).status, 0);
+  await fs.promises.writeFile(path.join(repoA, '.agents', 'skills', 'demo-skill', 'SKILL.md'), 'local change A\n');
+  await fs.promises.writeFile(path.join(repoB, '.agents', 'skills', 'demo-skill', 'SKILL.md'), 'local change B\n');
+
+  const forcedUpdate = run(['update', '--all-repositories', '--yes', '--force'], root, configHome, catalogUrl);
+
+  assert.equal(forcedUpdate.status, 0);
+  assert.match(forcedUpdate.stdout, /updated: 2/);
+  assert.match(fs.readFileSync(path.join(repoA, '.agents', 'skills', 'demo-skill', 'SKILL.md'), 'utf8'), /Version one/);
+  assert.match(fs.readFileSync(path.join(repoB, '.agents', 'skills', 'demo-skill', 'SKILL.md'), 'utf8'), /Version one/);
+});
+
 test('integration: bulk update continues after a repository state failure', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-bulk-failure-'));
   const configHome = path.join(root, 'config');
