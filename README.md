@@ -112,7 +112,7 @@ Use `--yes` for a non-interactive run:
 alson update --all-repositories --yes
 ```
 
-The bulk command updates every installed skill with a newer catalog version. It reports current repositories, repositories with no Alson-managed skills, blocked local changes, and failures. It continues after a problem in one repository. `--force` is required to replace a locally changed skill.
+The bulk command updates every installed skill whose catalog version or package hash differs. It reports current repositories, repositories with no Alson-managed skills, blocked local changes, and failures. It continues after a problem in one repository. `--force` is required to replace a locally changed skill.
 
 The configuration stores parent folders or repository roots only. Installed skills and `installed.json` remain inside each repository. After a successful interactive install, Alson may ask whether to add the current repository's direct parent folder automatically.
 
@@ -195,8 +195,8 @@ alson delete project-intake
 | Status | Meaning |
 |---|---|
 | not installed | No installation found |
-| current | Installed version matches the catalog |
-| update available | Installed version is older than the catalog |
+| current | Installed version and package hash match the catalog |
+| update available | Installed version or package hash differs from the catalog |
 | modified | Installed files differ from the recorded hash |
 | unmanaged | The skill exists but was not installed by the CLI |
 | incompatible | Skill requires a newer CLI version |

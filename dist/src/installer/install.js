@@ -170,7 +170,7 @@ async function computeStatuses(catalog, context) {
             if (hash !== record.hash) {
                 status = 'modified';
             }
-            else if ((0, version_js_1.compareVersions)(record.version, entry.version) < 0) {
+            else if (record.hash !== entry.hash || (0, version_js_1.compareVersions)(record.version, entry.version) < 0) {
                 status = 'update available';
             }
             else {

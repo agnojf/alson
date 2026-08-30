@@ -217,7 +217,7 @@ export async function computeStatuses(
       const hash = await packageHash(targetDir(entry.name, context));
       if (hash !== record.hash) {
         status = 'modified';
-      } else if (compareVersions(record.version, entry.version) < 0) {
+      } else if (record.hash !== entry.hash || compareVersions(record.version, entry.version) < 0) {
         status = 'update available';
       } else {
         status = 'current';

@@ -210,6 +210,37 @@ test('integration: force replaces modified current skills across repositories', 
   assert.match(fs.readFileSync(path.join(repoB, '.agents', 'skills', 'demo-skill', 'SKILL.md'), 'utf8'), /Version one/);
 });
 
+test('integration: bulk update detects same-version catalog content changes', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-bulk-content-change-'));
+  const configHome = path.join(root, 'config');
+  const parent = path.join(root, 'repositories');
+  const remoteRoot = path.join(root, 'remote');
+  const catalogFile = path.join(remoteRoot, 'catalog.json');
+  fs.mkdirSync(parent, { recursive: true });
+  fs.mkdirSync(remoteRoot, { recursive: true });
+
+  const repo = makeRepo(parent, 'repo-a');
+  const first = await writeSkillPackage(remoteRoot, '1.0.0', 'Original content.');
+  await writeCatalog(catalogFile, remoteRoot, '1.0.0', first.hash, first.files);
+  const catalogUrl = pathToFileURL(catalogFile).toString();
+
+  assert.equal(run(['repos', 'add', parent], root, configHome, catalogUrl).status, 0);
+  assert.equal(run(['install', 'demo-skill'], repo, configHome, catalogUrl).status, 0);
+
+  const second = await writeSkillPackage(remoteRoot, '1.0.0', 'Revised content.');
+  await writeCatalog(catalogFile, remoteRoot, '1.0.0', second.hash, second.files);
+
+  const preview = run(['update', '--all-repositories', '--dry-run'], root, configHome, catalogUrl);
+
+  assert.equal(preview.status, 0);
+  assert.match(preview.stdout, /repo-a: demo-skill 1\.0\.0 -> 1\.0\.0 update available/);
+
+  const update = run(['update', '--all-repositories', '--yes'], root, configHome, catalogUrl);
+
+  assert.equal(update.status, 0);
+  assert.match(fs.readFileSync(path.join(repo, '.agents', 'skills', 'demo-skill', 'SKILL.md'), 'utf8'), /Revised content/);
+});
+
 test('integration: bulk update continues after a repository state failure', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-bulk-failure-'));
   const configHome = path.join(root, 'config');
