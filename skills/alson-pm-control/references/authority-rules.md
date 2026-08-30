@@ -27,6 +27,7 @@ These require explicit PM direction. The agent prepares the proposed entry, pres
 | Escalate to a sponsor or steering body | Prepare the escalation; never send it |
 | Establish or revise a baseline | Prepare the baseline and impact record; wait for approval |
 | Accept a deliverable or phase | Prepare acceptance evidence; wait for the authorized approver |
+| Accept, apply, supersede, or close a lesson learned | Keep it `Proposed`; present the evidence, recommendation, and related action or decision; wait for direction |
 | Reconcile a PM-only action | Keep it `Proposed` or `Governance pending` until direction is recorded |
 
 ## Mandatory Stage 05 Approval Checkpoint
@@ -61,7 +62,7 @@ If the PM's response is partial or ambiguous, ask for the business scope of the 
 
 1. Agent captures the item as `Proposed` with source and evidence.
 2. Agent presents the proposed entry and any recommendation.
-3. PM reviews and directs: accept as `Open`, modify, or reject.
+3. PM reviews and directs the appropriate state, such as accepting, modifying, or rejecting the proposal.
 4. Agent applies the direction and records the state and date.
 
 For process runs, Stage 05 is the only stage that may reconcile canonical records. A quality pass without post-review PM direction produces `Governance pending` and blocks Stage 05, including for non-sensitive metadata.

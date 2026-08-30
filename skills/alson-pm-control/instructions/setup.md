@@ -39,7 +39,7 @@ Project preferences and thresholds are optional during first use and must not bl
    └── summaries/
    ```
 
-8. Copy the project-control, source-index, process-register, artifact-index, and register templates into missing locations.
+8. Copy the project-control, source-index, process-register, artifact-index, and all register templates, including `lessons-learned-register.md`, into missing locations.
 9. Replace values supplied or confirmed by the user, such as `{{PROJECT_NAME}}` and `{{CONTROL_ROOT_PATH}}`.
 10. For optional values not yet supplied, use `Not configured`, `Unknown`, or blank as appropriate instead of stopping setup. Do not run a full artifact baseline or infer artifact need during setup.
 11. Add all 40 process rows as `Not assessed`; do not invent applicability or ownership.
@@ -62,7 +62,7 @@ Project preferences and thresholds are optional during first use and must not bl
 |---|---|
 | Path confirmed | Exact writable control-root location confirmed before first write |
 | Existing work preserved | No existing register or output overwritten without direction |
-| Structure complete | Required files and output folders exist |
+| Structure complete | Required files and output folders exist, including `registers/lessons-learned-register.md` |
 | Source handling | Only user-supplied or confirmed locations recorded; no source document copied |
 | Missing facts | Unknown project facts are not invented |
 | Optional settings | Missing preferences or thresholds do not block setup |

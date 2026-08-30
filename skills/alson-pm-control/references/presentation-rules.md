@@ -15,7 +15,7 @@ A PM-facing response is a view of the control system. It is not a second source 
 | Layer | Purpose | Examples | Default audience |
 |---|---|---|---|
 | Layer 1: User / PM View | Help the PM understand condition and act | Decisions required, blockers, significant risks, changes, deadlines, exceptions, completed outcomes, next actions | PM and stakeholders |
-| Layer 2: Operational Control | Maintain current project-control state | RAID registers, action and decision logs, change log, schedule and scope state, acceptance status, process state | Alson and PM when needed |
+| Layer 2: Operational Control | Maintain current project-control state | RAID registers, action and decision logs, change log, lessons learned register, schedule and scope state, acceptance status, process state | Alson and PM when needed |
 | Layer 3: Evidence / Audit | Preserve how a conclusion or change was produced | Run manifests, process briefs, evidence packages, Artifact Need Gate records, validation, review, reconciliation, source traceability, internal IDs, and stage mechanics | Alson, auditors, and reviewers |
 
 Keep all three layers. Do not copy Layer 2 or Layer 3 into Layer 1 unless the user asks for detail or the information is needed to make a safe decision.

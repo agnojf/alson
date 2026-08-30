@@ -67,6 +67,7 @@ External project documents are never copied into the control root by default.
 | Run a PMI process | `stages/01-select-and-tailor/CONTEXT.md`, then the next stage contracts in order; apply the Artifact Need Gate after Stage 02; pause after Stage 04 for PM approval | Process register, mapped artifact candidates, and affected records | Process-specific sources from `source-index.md` |
 | Review project health | `instructions/health.md` | All registers | Project sources named in `source-index.md` |
 | Capture, review, or update RAID | `instructions/raid.md` | Affected RAID register(s) | Relevant source or supplied record |
+| Capture lessons learned | `instructions/intake.md` | `lessons-learned-register.md` and relevant related records | Supplied record or source |
 | Review outstanding work | `instructions/actions.md` | `action-log.md` | None required |
 | Initialize or repair a project control root | `setup/CONTEXT.md` | None required | User-provided project identity/source information |
 | Process a meeting record or source document | `instructions/intake.md` | Affected registers | Supplied record or source |
@@ -123,6 +124,7 @@ Examples:
 | `Our schedule is slipping. What should I look at?` | Project health with schedule focus |
 | `What risks are we missing?` | Risk identification/review |
 | `Capture the important items from this meeting.` | Intake and classification |
+| `Capture a lesson learned from this retrospective.` | Intake and classification |
 | `We received a change request. What is the impact?` | Change assessment |
 | `What should I tell governance?` | Governance update preparation |
 
@@ -175,6 +177,7 @@ The complete process register, artifact index, run records, and validation recor
 | `review this project`, `project health` | Health review |
 | `check the RAID`, `what needs my attention` | RAID or attention review as appropriate |
 | `add a risk`, `capture the risks from <document>` | RAID capture |
+| `add a lesson learned`, `capture a lesson learned`, `record a lesson learned`, `capture lessons from <document>` | Intake and classification with the lessons learned register |
 | `update the issue register`, `update the risk register` | RAID reconciliation from supplied input |
 | `review outstanding work`, `what is outstanding` | Action log review |
 | `initialize control root`, `set up project control`, `help me set up this project` | Setup workflow |

@@ -16,7 +16,7 @@ Use these scenarios to verify routing and behavior. Each scenario states the exp
 | RS-08 | "Update the issue register based on this meeting record." | raid instruction, issue register | Changes applied only after PM direction |
 | RS-09 | "Initialize the control root at this path." | setup instruction | Required structure created or repaired; existing records preserved |
 | RS-10 | "Process this meeting record for project-control items." | intake instruction | Candidates classified across affected registers as Proposed |
-| RS-11 | "status" | status instruction | All seven registers checked; attention list returned without edits |
+| RS-11 | "status" | status instruction | All registers checked; attention list returned without edits |
 | RS-12 | "Refresh the project sources." | refresh instruction | Source access and freshness checked; affected register items identified |
 | RS-13 | "Run Identify Risks for this project." | Stage 01 through Stage 04, pause for explicit post-review PM approval, then Stage 05; Risk recipe PM-36 | Draft risks are traceable; no reconciliation occurs before the checkpoint |
 | RS-14 | "Run Monitor and Control Schedule." | Stage 01 through Stage 04, pause for explicit post-review PM approval, then Stage 05; Schedule recipe PM-18 | Schedule evidence is scoped and variance response is not approved silently |
@@ -37,6 +37,7 @@ Use these scenarios to verify routing and behavior. Each scenario states the exp
 | RS-29 | User asks "Show me the evidence." | Relevant evidence view | Supporting source, validation, review, run, and traceability records are shown for the result requested |
 | RS-30 | User opens project-control.md | Layer 1 project dashboard | The PM can understand condition, attention, decisions, completed outcomes, and next actions without reading full registers |
 | RS-31 | User-facing outputs are simplified | All routes and process engine | Canonical registers, validation, approval, reconciliation, and audit evidence remain available and unchanged in purpose |
+| RS-32 | "Capture a lesson learned from this retrospective." | intake instruction, lessons learned register | Lesson is captured as Proposed with date, category, description, impact, recommendation, Related IDs, and source traceability |
 
 ## First-Use Experience Scenarios
 
@@ -52,6 +53,7 @@ Use these scenarios to verify routing and behavior. Each scenario states the exp
 | FU-08 | User says "Our schedule is slipping. What should I look at?" | Route by outcome to project health with schedule focus; do not require `Run Monitor and Control Schedule` wording |
 | FU-09 | User says "Capture the important items from this meeting." | Route to intake and classification; do not require the user to name RAID, action, decision, or change registers |
 | FU-10 | User already answered a setup fact earlier in the active project context | Reuse it; do not ask the same question again unless it became ambiguous or conflicting |
+| FU-11 | Setup completes for a new project | Create `registers/lessons-learned-register.md` with the other missing register templates; do not create a separate lessons log |
 
 ## Boundary Scenarios
 

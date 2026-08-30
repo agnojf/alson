@@ -23,6 +23,7 @@ State transitions keep register history understandable and protect PM decision a
 | Action | Proposed -> Open -> In Progress or Blocked -> Resolved -> Closed |
 | Decision | Proposed -> Pending -> Made or Superseded |
 | Change | Proposed -> Approved -> Closed, or Proposed -> Rejected |
+| Lessons learned | Proposed -> Accepted -> Applied or Superseded -> Closed |
 
 ## Process Run Lifecycle
 
@@ -56,6 +57,8 @@ Normal flow: `Active -> Revision required -> Active`, or `Active -> Governance p
 | Made | Decision outcome recorded |
 | Approved | Change accepted by the PM |
 | Rejected | Change declined by the PM with reason recorded |
+| Accepted | PM confirmed the lesson is useful for the project |
+| Applied | Lesson recommendation adopted or linked to an action, decision, or working practice |
 | Superseded | Replaced by a newer item |
 | Closed | Verified, archived, and no further action is required |
 

@@ -9,7 +9,7 @@ The default status view is Layer 1. It is not a dump of the operational register
 | Source | What is needed |
 |---|---|
 | User | Requested view, optional review date, audience, or focus area |
-| Control root | project-control.md and all seven registers; process-register.md and artifact-index.md when initialized |
+| Control root | project-control.md and all registers; process-register.md and artifact-index.md when initialized |
 | Workspace | references/presentation-rules.md, references/prioritization.md, references/definitions.md, references/thresholds.md, and references/authority-rules.md |
 | External | None by default; load a source only when a register item needs verification |
 

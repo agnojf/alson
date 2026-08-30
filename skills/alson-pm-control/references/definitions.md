@@ -13,11 +13,14 @@ Common terms for the control workspace. Keep definitions stable. The project man
 
 ## Other Working Items
 
+A lesson learned is maintained in the register below; retrospective notes are source inputs, not a second canonical record.
+
 | Term | Meaning | Register |
 |---|---|---|
 | Action | A concrete task to move work forward, with an owner and a due date or trigger. | `action-log.md` |
 | Decision | A choice made or required, with owner, timing, rationale, and consequence of delay. | `decision-log.md` |
 | Change | A proposed or approved modification to scope, schedule, cost, or baseline. | `change-log.md` |
+| Lesson learned | A reusable insight from project experience, including its context and recommended application. | `lessons-learned-register.md` |
 
 ## Process Terms
 

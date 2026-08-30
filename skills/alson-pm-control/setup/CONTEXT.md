@@ -117,7 +117,7 @@ Do not ask optional setup questions unless the missing value prevents safe initi
 4. Confirm the control-root path before the first write unless the user's instruction already explicitly authorizes that exact path.
 5. Preserve existing files and create only missing structure.
 6. Create `artifacts/`, `runs/`, `status-reports/`, `governance-updates/`, `summaries/`, and `registers/`.
-7. Copy templates only into missing files. Do not overwrite existing records.
+7. Copy templates only into missing files, including `templates/registers/lessons-learned-register.md`. Do not overwrite existing records.
 8. Initialize `process-register.md` with all 40 processes as `Not assessed`.
 9. Initialize `artifact-index.md` with only artifact ownership supplied or confirmed by the user.
 10. Record only user-supplied or confirmed source locations in `source-index.md`.
@@ -166,7 +166,7 @@ Do not explain the five-stage PMI pipeline during setup unless the user asks.
 | Identity | Project can be identified without ambiguity |
 | Path | Exact writable control-root path is confirmed before first write |
 | Preservation | Existing records are unchanged |
-| Structure | Required folders and files exist |
+| Structure | Required folders and files, including `registers/lessons-learned-register.md`, exist |
 | Process seed | All 40 process IDs are present once |
 | Sources | Only supplied or confirmed locations are indexed |
 | Optional settings | Missing preferences do not block setup |

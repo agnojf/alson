@@ -51,6 +51,7 @@ Use the records below when operational detail is needed. Keep this dashboard con
 | Source index | Where authoritative project sources are located | source-index.md |
 | RAID and action registers | Current risks, assumptions, issues, dependencies, and actions | registers/ |
 | Decision and change logs | Decisions and proposed or approved changes | registers/ |
+| Lessons learned register | Reusable project knowledge and recommendations | registers/lessons-learned-register.md |
 | Process register | Complete operational process state | process-register.md |
 | Artifact index | Approved artifact ownership, need, treatment, and location | artifact-index.md |
 | Process runs | Evidence, validation, approval, and reconciliation trail | runs/ |
