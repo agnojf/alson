@@ -1,10 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runInstall = runInstall;
-const node_path_1 = __importDefault(require("node:path"));
 const catalog_js_1 = require("../catalog/catalog.js");
 const errors_js_1 = require("../errors.js");
 const install_js_1 = require("../installer/install.js");
@@ -20,8 +16,8 @@ async function runInstall(args) {
     const dir = await (0, install_js_1.installSkill)(catalog, entry, { force: args.force }, context);
     console.log(`installed ${entry.name}@${entry.version} to ${dir}`);
     try {
-        if (await (0, config_js_1.offerRepositoryParent)(context.root)) {
-            console.log(`added ${node_path_1.default.dirname(context.root)} to bulk update folders`);
+        if (await (0, config_js_1.offerRepositoryRoot)(context.root)) {
+            console.log(`added ${context.root} to bulk update folders`);
         }
     }
     catch (err) {

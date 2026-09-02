@@ -108,16 +108,15 @@ export async function isRepositoryConfigured(root: string): Promise<boolean> {
   return config.parents.includes(canonicalRoot) || config.parents.includes(path.dirname(canonicalRoot));
 }
 
-export async function offerRepositoryParent(root: string): Promise<boolean> {
+export async function offerRepositoryRoot(root: string): Promise<boolean> {
   if (!process.stdin.isTTY || (await isRepositoryConfigured(root))) {
     return false;
   }
 
   const canonicalRoot = await fs.promises.realpath(root).catch(() => path.resolve(root));
-  const parent = path.dirname(canonicalRoot);
-  const shouldAdd = await confirm(`Add ${parent} to bulk update folders? (y/n)`);
+  const shouldAdd = await confirm(`Add ${canonicalRoot} to bulk update folders? (y/n)`);
   if (!shouldAdd) {
     return false;
   }
-  return (await addRepositoryParent(parent)).added;
+  return (await addRepositoryParent(canonicalRoot)).added;
 }

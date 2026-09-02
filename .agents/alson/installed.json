@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "installs": {
+    "alson-explain": {
+      "name": "alson-explain",
+      "version": "2.0.0",
+      "hash": "a597ca1dbf97c62b236bcbe1497f560f9d4e95a751193b706c4f65127772328e",
+      "cliVersion": "0.7.2",
+      "installedAt": "2026-09-02T02:04:15.661Z",
+      "files": [
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "references/explanation-standard.md",
+        "references/test-scenarios.md",
+        "skill.json",
+        "SKILL.md"
+      ],
+      "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/alson-explain"
+    }
+  }
+}

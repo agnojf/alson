@@ -114,7 +114,7 @@ alson update --all-repositories --yes
 
 The bulk command updates every installed skill whose catalog version or package hash differs. It reports current repositories, repositories with no Alson-managed skills, blocked local changes, and failures. It continues after a problem in one repository. `--force` is required to replace a locally changed skill.
 
-The configuration stores parent folders or repository roots only. Installed skills and `installed.json` remain inside each repository. After a successful interactive install, Alson may ask whether to add the current repository's direct parent folder automatically.
+The configuration stores parent folders or repository roots only. Installed skills and `installed.json` remain inside each repository. After a successful interactive install, Alson may ask whether to add the current repository root automatically.
 
 Update the CLI separately when a CLI fix or feature is released:
 

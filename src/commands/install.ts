@@ -1,9 +1,8 @@
-import path from 'node:path';
 import { findSkill, loadCatalog } from '../catalog/catalog.js';
 import { AlsonError } from '../errors.js';
 import { installSkill } from '../installer/install.js';
 import { currentContext } from '../util/paths.js';
-import { offerRepositoryParent } from '../repositories/config.js';
+import { offerRepositoryRoot } from '../repositories/config.js';
 
 export interface InstallArgs {
   skill: string;
@@ -21,8 +20,8 @@ export async function runInstall(args: InstallArgs): Promise<void> {
   const dir = await installSkill(catalog, entry, { force: args.force }, context);
   console.log(`installed ${entry.name}@${entry.version} to ${dir}`);
   try {
-    if (await offerRepositoryParent(context.root)) {
-      console.log(`added ${path.dirname(context.root)} to bulk update folders`);
+    if (await offerRepositoryRoot(context.root)) {
+      console.log(`added ${context.root} to bulk update folders`);
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

@@ -10,7 +10,7 @@ exports.addRepositoryParent = addRepositoryParent;
 exports.removeRepositoryParent = removeRepositoryParent;
 exports.repositoryParents = repositoryParents;
 exports.isRepositoryConfigured = isRepositoryConfigured;
-exports.offerRepositoryParent = offerRepositoryParent;
+exports.offerRepositoryRoot = offerRepositoryRoot;
 const node_os_1 = __importDefault(require("node:os"));
 const node_fs_1 = __importDefault(require("node:fs"));
 const node_path_1 = __importDefault(require("node:path"));
@@ -102,15 +102,14 @@ async function isRepositoryConfigured(root) {
     const canonicalRoot = await node_fs_1.default.promises.realpath(root).catch(() => node_path_1.default.resolve(root));
     return config.parents.includes(canonicalRoot) || config.parents.includes(node_path_1.default.dirname(canonicalRoot));
 }
-async function offerRepositoryParent(root) {
+async function offerRepositoryRoot(root) {
     if (!process.stdin.isTTY || (await isRepositoryConfigured(root))) {
         return false;
     }
     const canonicalRoot = await node_fs_1.default.promises.realpath(root).catch(() => node_path_1.default.resolve(root));
-    const parent = node_path_1.default.dirname(canonicalRoot);
-    const shouldAdd = await (0, io_js_1.confirm)(`Add ${parent} to bulk update folders? (y/n)`);
+    const shouldAdd = await (0, io_js_1.confirm)(`Add ${canonicalRoot} to bulk update folders? (y/n)`);
     if (!shouldAdd) {
         return false;
     }
-    return (await addRepositoryParent(parent)).added;
+    return (await addRepositoryParent(canonicalRoot)).added;
 }
