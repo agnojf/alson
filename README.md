@@ -42,16 +42,16 @@ Tagged releases include the compiled CLI and generated catalog. Installation doe
 
 Install [Node.js 20 or later](https://nodejs.org/en/download), which includes npm, before installing Alson.
 
-Install the CLI globally from GitHub:
+Install the CLI globally from GitHub. npm 12 and later require an explicit opt-in for remote tarball downloads:
 
 ```bash
-npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
+npm install -g --allow-remote=all https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 ```
 
 For a stable release, replace the default branch with its Git tag:
 
 ```bash
-npm install -g https://github.com/agnojf/alson/archive/refs/tags/vX.Y.Z.tar.gz
+npm install -g --allow-remote=all https://github.com/agnojf/alson/archive/refs/tags/vX.Y.Z.tar.gz
 ```
 
 If npm reports an EACCES permission error, the global npm directory is not writable by your user. Use a user-owned Node installation (for example nvm) or set a user-level npm prefix instead of using sudo:
@@ -59,7 +59,7 @@ If npm reports an EACCES permission error, the global npm directory is not writa
 ```bash
 npm config set prefix "$HOME/.npm-global"
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.zshrc
-npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
+npm install -g --allow-remote=all https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 ```
 
 Already-installed skills work offline. New skill installs and updates need internet access unless the package is already in the CLI bundle or local cache.
@@ -119,7 +119,7 @@ The configuration stores parent folders or repository roots only. Installed skil
 Update the CLI separately when a CLI fix or feature is released:
 
 ```bash
-npm install -g https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
+npm install -g --allow-remote=all https://github.com/agnojf/alson/archive/refs/heads/main.tar.gz
 alson --version
 ```
 
