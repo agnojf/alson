@@ -24,7 +24,8 @@ test('package: npm pack includes the CLI, catalog, and every skill', () => {
     cwd: repoRoot,
     encoding: 'utf8'
   });
-  const result = JSON.parse(stdout) as Array<{ filename: string }>;
+  const parsed = JSON.parse(stdout) as Array<{ filename: string }> | Record<string, { filename: string }>;
+  const result = Array.isArray(parsed) ? parsed : Object.values(parsed);
   assert.equal(result.length, 1);
   const tarball = path.join(tmp, result[0].filename);
   assert.equal(fs.existsSync(tarball), true);

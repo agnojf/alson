@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import {
   addRepositoryParent,
+  isRepositoryConfigured,
   readRepositoryConfig,
   removeRepositoryParent
 } from '../../src/repositories/config.js';
@@ -26,6 +27,23 @@ test('repository config: add and remove parent folders', async () => {
     const removed = await removeRepositoryParent(parent);
     assert.equal(removed.removed, true);
     assert.deepEqual((await readRepositoryConfig()).parents, []);
+  } finally {
+    if (previous === undefined) {
+      delete process.env.ALSON_CONFIG_HOME;
+    } else {
+      process.env.ALSON_CONFIG_HOME = previous;
+    }
+  }
+});
+
+test('repository config: recognizes a configured repository root', async () => {
+  const configHome = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-configured-root-'));
+  const repository = fs.mkdtempSync(path.join(os.tmpdir(), 'alson-repository-'));
+  const previous = process.env.ALSON_CONFIG_HOME;
+  process.env.ALSON_CONFIG_HOME = configHome;
+  try {
+    await addRepositoryParent(repository);
+    assert.equal(await isRepositoryConfigured(repository), true);
   } finally {
     if (previous === undefined) {
       delete process.env.ALSON_CONFIG_HOME;

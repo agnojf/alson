@@ -100,7 +100,7 @@ async function repositoryParents() {
 async function isRepositoryConfigured(root) {
     const config = await readRepositoryConfig();
     const canonicalRoot = await node_fs_1.default.promises.realpath(root).catch(() => node_path_1.default.resolve(root));
-    return config.parents.includes(node_path_1.default.dirname(canonicalRoot));
+    return config.parents.includes(canonicalRoot) || config.parents.includes(node_path_1.default.dirname(canonicalRoot));
 }
 async function offerRepositoryParent(root) {
     if (!process.stdin.isTTY || (await isRepositoryConfigured(root))) {

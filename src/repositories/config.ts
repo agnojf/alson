@@ -105,7 +105,7 @@ export async function repositoryParents(): Promise<string[]> {
 export async function isRepositoryConfigured(root: string): Promise<boolean> {
   const config = await readRepositoryConfig();
   const canonicalRoot = await fs.promises.realpath(root).catch(() => path.resolve(root));
-  return config.parents.includes(path.dirname(canonicalRoot));
+  return config.parents.includes(canonicalRoot) || config.parents.includes(path.dirname(canonicalRoot));
 }
 
 export async function offerRepositoryParent(root: string): Promise<boolean> {
