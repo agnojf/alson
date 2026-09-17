@@ -33,4 +33,4 @@ total possible points = number of dimensions x 13
 default passing threshold = 80%
 ```
 
-The workspace may set a higher threshold in `_config/quality-policy.md` or `_config/workspace.md`. Do not round a score up. A failed acceptance criterion blocks the gate regardless of the rubric score.
+The workflow may set a higher threshold in `_config/quality-policy.md` or `_config/workflow.md`. Do not round a score up. A failed acceptance criterion blocks the gate regardless of the rubric score.

@@ -14,7 +14,7 @@ Replace the artifact-specific placeholder with criteria that can be checked from
 
 ## Universal Criteria
 
-Apply these criteria to every artifact unless the workspace documents a justified exception.
+Apply these criteria to every artifact unless the workflow documents a justified exception.
 
 | ID | Criterion | Pass condition |
 |---|---|---|

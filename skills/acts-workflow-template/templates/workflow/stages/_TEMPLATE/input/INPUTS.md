@@ -1,6 +1,6 @@
 # Run Inputs
 
-Use this file when the actual source material lives outside the workspace.
+Use this file when the actual source material lives outside the workflow.
 
 | Input | Path / URL / Identifier | Required | Notes |
 |---|---|---:|---|
@@ -10,4 +10,4 @@ Use this file when the actual source material lives outside the workspace.
 
 - Treat these locations as pointers to source material.
 - Do not invent missing locations.
-- Do not copy source files into the workspace unless the workflow requires it.
+- Do not copy source files into the workflow unless the workflow requires it.

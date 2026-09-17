@@ -1,0 +1,6 @@
+{
+  "name": "acts-workflow-template",
+  "version": "2.0.0",
+  "description": "Creates and validates reusable ACTS workflows with explicit routing, stage contracts, quality gates, and resumable runs.",
+  "minCliVersion": "0.1.0"
+}

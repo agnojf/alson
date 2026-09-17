@@ -1,6 +1,6 @@
-# Workspace References
+# Workflow References
 
-Store stable domain knowledge used across the workspace here.
+Store stable domain knowledge used across the workflow here.
 
 Examples:
 - policies
