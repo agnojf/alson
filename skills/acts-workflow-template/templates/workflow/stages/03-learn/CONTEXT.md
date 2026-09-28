@@ -25,23 +25,24 @@ Passed quality audit + current outputs + policy -> next-action assessment -> wha
 
 ## Inputs
 
-| Layer | Source | Required | Use |
-|---|---|---:|---|
-| 0 | `../../AGENTS.md` | Yes | Identity and communication rules |
-| 3 | `../../_config/quality-policy.md` | Yes | Quality precondition and state rules |
-| 3 | `../../_config/run-state-template.md` | Yes | State schema |
-| 3 | `references/what-now-template.md` | Yes | Handoff structure |
-| 4 | `{{RUN_PATH}}/stages/02-measure/audit-findings.md` | Yes | Passed gate and evidence |
-| 4 | `{{RUN_PATH}}/stages/<production-stage>/` | Yes | Current-run outputs and actions |
-| 4 | `{{RUN_PATH}}/run-state.md` | Yes | Current run context |
+| Layer | Source / location | Scope | Required | Use |
+|---|---|---|---:|---|
+| 0 | `../../AGENTS.md` | Full file | Yes | Identity and communication rules |
+| 3 | `../../_config/quality-policy.md` | Learn precondition | Yes | Quality precondition and state rules |
+| 3 | `../../_config/run-state-template.md` | Full file | Yes | State schema |
+| 3 | `references/what-now-template.md` | Full file | Yes | Handoff structure |
+| 4 | `{{RUN_PATH}}/stages/02-measure/audit-findings.md` | Full file | Yes | Passed gate and evidence |
+| 4 | `{{RUN_PATH}}/stages/<final-production-stage>/build-handoff.md` | Output paths | Yes | Current-run inventory |
+| 4 | Current-run outputs named in the final build handoff and passing audit | Named output paths only | Yes | Current-run outputs and actions |
+| 4 | `{{RUN_PATH}}/run-state.md` | Full file | Yes | Current run context |
 
 ## Input Gate
 
-Confirm that the audit states `Passed`, the score meets the configured threshold, every applicable criterion is `Pass`, and no quality blocker remains. If any condition fails, do not create `what-now.md`; route back to Measure or the responsible production stage.
+Confirm that the audit states `Passed`, the score meets the configured threshold, every applicable criterion is `Pass`, no quality blocker remains, and the handoff names the current audited outputs. If any condition fails, do not create `what-now.md`; route back to Measure or the responsible production stage.
 
 ## Process
 
-1. Read the passing audit, current-run outputs, policy, state, and template.
+1. Read the passing audit, its named current-run outputs, policy, state, and template.
 2. Confirm whether the intended outcome was achieved and whether outputs are consistent.
 3. Identify remaining assumptions, decisions, risks, or useful follow-up work.
 4. Classify each open item by its evidence-based problem type.

@@ -38,6 +38,8 @@ ACTS adds operational controls around that foundation:
 
 The paper presents these as design rules and proposed controls. It does not establish better output quality, lower cost, faster execution, less human work, or better results than ICM or other agent frameworks.
 
+This package implements independent setup operations and keeps reusable input schemas separate from each run's manifest, source pointers, and outputs.
+
 ## Installation
 
 ### OpenCode
@@ -72,7 +74,7 @@ Trigger the skill with requests such as:
 - "Validate this workflow structure."
 - "Explain the five context layers in this workflow template."
 
-The skill confirms the destination before writing, loads only the needed template files, configures the workflow, and runs the validation checklist before work begins.
+The skill confirms the destination before writing, loads only the needed setup operation, and validates the assembled workflow before work begins. Each setup operation can also run alone when its inputs exist.
 
 Every configured pipeline ends with quality-gate and next-action roles, named Measure and Learn by default. Failed quality checks route back for correction and remeasurement. Missing information or an explicit stop is recorded in `run-state.md` so the run can resume later.
 
@@ -84,6 +86,8 @@ Every configured pipeline ends with quality-gate and next-action roles, named Me
 | `CONTEXT.md` | Selective routing for the skill package |
 | `skill.json` | Package metadata |
 | `templates/workflow/` | Reusable workflow skeleton from `workspaces/acts-workflow-template` |
+
+The bundled copy is self-contained. Keep it aligned with the canonical workspace template when releasing a new package version.
 
 ## What It Does Not Do
 

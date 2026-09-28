@@ -25,16 +25,16 @@ Build handoff + production outputs + criteria + rubric + policy -> quality audit
 
 ## Inputs
 
-| Layer | Source | Required | Use |
-|---|---|---:|---|
-| 0 | `../../AGENTS.md` | Yes | Identity and communication rules |
-| 3 | `../../_config/quality-policy.md` | Yes | Gate, correction, and pause rules |
-| 3 | `../../_config/run-state-template.md` | Yes | State schema |
-| 3 | `references/acceptance-criteria.md` | Yes | Pass/fail criteria |
-| 3 | `references/quality-rubric.md` | Yes | Quality scoring |
-| 4 | `{{RUN_PATH}}/stages/<final-production-stage>/build-handoff.md` | Yes | Output inventory |
-| 4 | Paths listed in the build handoff | Yes | Outputs to audit |
-| 4 | `{{RUN_PATH}}/run-state.md` | No | Current attempt and resume context |
+| Layer | Source / location | Scope | Required | Use |
+|---|---|---|---:|---|
+| 0 | `../../AGENTS.md` | Full file | Yes | Identity and communication rules |
+| 3 | `../../_config/quality-policy.md` | Full file | Yes | Gate, correction, and pause rules |
+| 3 | `../../_config/run-state-template.md` | Full file | Yes | State schema |
+| 3 | `references/acceptance-criteria.md` | Full file | Yes | Pass/fail criteria |
+| 3 | `references/quality-rubric.md` | Full file | Yes | Quality scoring |
+| 4 | `{{RUN_PATH}}/stages/<final-production-stage>/build-handoff.md` | Full file | Yes | Output inventory |
+| 4 | Paths listed in the build handoff | Full files | Yes | Outputs to audit |
+| 4 | `{{RUN_PATH}}/run-state.md` | Attempt and resume fields | No | Current attempt and resume context |
 
 ## Input Gate
 

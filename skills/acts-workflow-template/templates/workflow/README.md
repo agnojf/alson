@@ -28,17 +28,15 @@ A stage should be independently understandable, executable, testable, replaceabl
 
 ## Quick Start
 
-1. Copy this folder and rename it for the workflow.
-2. Complete `setup/questionnaire.md`.
-3. Update `AGENTS.md` with workflow-wide operating rules.
-4. Update `CONTEXT.md` with the workflow map and routing rules.
-5. Copy `stages/_TEMPLATE/` for each task or stage you need.
-6. Keep the quality-gate and next-action roles as the final two stages. The default names are `02-measure` and `03-learn`; rename or renumber them if production stages expand.
-7. Define each stage's `Inputs -> Transform -> Outputs` contract first.
-8. Put stable rules in `_config/`, `references/`, or stage `references/`.
-9. Put run-specific source pointers in the stage `input/` folder and write outputs under `{{RUN_PATH}}`.
-10. Run only the stage needed for the user's current request.
-11. Verify the declared output and stop at any required review gate before continuing downstream.
+1. Confirm the destination and repeated outcome. Use `setup/CONTEXT.md` to select the next needed operation.
+2. **Define:** specify work products, stable references, draft success criteria, and future run input schemas. Use only the needed questions from `setup/questionnaire.md`.
+3. **Build Stage:** use `stages/_TEMPLATE/` to define one transformation at a time, including its stable input schema under `references/`.
+4. **Build Router:** connect plain-language requests to available stages in `AGENTS.md` and `CONTEXT.md`.
+5. **Add Quality:** configure Measure and Learn as the final two roles, including criteria, correction routes, and runtime state.
+6. **Validate:** run `setup/validation-checklist.md` before executing the workflow.
+7. At execution, put resolved source pointers in `{{RUN_PATH}}/stages/<stage>/inputs.md` and all generated outputs under `{{RUN_PATH}}`. Run only the required stages and stop at review gates.
+
+Apply `_config/conventions.md` and only applicable sections of `references/specialized-conventions.md`. Each setup operation may be invoked on its own when its required inputs exist. Setup defines Layer 4 schemas; a run supplies Layer 4 values.
 
 When this workflow is invoked while it still contains placeholders, setup runs before any work stage.
 
@@ -50,7 +48,9 @@ When this workflow is invoked while it still contains placeholders, setup runs b
 | 1 | `CONTEXT.md` | Workflow map, routing, and what to load |
 | 2 | `stages/<stage>/CONTEXT.md` | Stage interface: inputs, transform, outputs, verification |
 | 3 | `_config/`, `references/`, `shared/`, stage `references/` | Stable constraints and reusable knowledge |
-| 4 | `{{RUN_PATH}}/stages/<stage>/` | Run-specific working artifacts and handoffs |
+| 4 | `{{RUN_PATH}}/` and declared external sources | Run-specific pointers, working artifacts, state, and handoffs |
+
+Layers 0-3 describe the reusable workflow. Layer 4 is the current run. The run manifest lists confirmed inputs; each stage's `inputs.md` resolves the sources it will read. External sources stay in their original locations.
 
 ## Quality Loop
 
@@ -104,18 +104,20 @@ Measure passes only when the quality score meets the configured threshold and ev
 │   ├── conventions.md
 │   ├── review-policy.md
 │   ├── quality-policy.md
+│   ├── run-manifest-template.md
+│   ├── run-input-template.md
 │   └── run-state-template.md
 ├── references/
-│   └── README.md
+│   ├── README.md
+│   └── specialized-conventions.md
 ├── shared/
 │   └── README.md
 ├── stages/
 │   ├── _TEMPLATE/
 │   │   ├── CONTEXT.md
-│   │   ├── references/
-│   │   │   └── README.md
-│   │   └── input/
-│   │       └── INPUTS.md
+│   │   └── references/
+│   │       ├── README.md
+│   │       └── input-schema.md
 │   ├── 02-measure/
 │   │   ├── CONTEXT.md
 │   │   └── references/
@@ -123,6 +125,12 @@ Measure passes only when the quality score meets the configured threshold and ev
 │       ├── CONTEXT.md
 │       └── references/
 └── setup/
+    ├── CONTEXT.md
+    ├── define/CONTEXT.md
+    ├── build-stage/CONTEXT.md
+    ├── build-router/CONTEXT.md
+    ├── add-quality/CONTEXT.md
+    ├── validate/CONTEXT.md
     ├── questionnaire.md
     └── validation-checklist.md
 ```
@@ -132,9 +140,9 @@ Measure passes only when the quality score meets the configured threshold and ev
 Use numbered stages for sequential workflows:
 
 ```text
-01_discovery/
-02_analysis/
-03_delivery/
+01-discovery/
+02-analysis/
+03-delivery/
 ```
 
 Use capability names when stages are independently invoked:

@@ -41,10 +41,12 @@ Route the request to the smallest useful operation:
 
 | User intent | Load | Result |
 |---|---|---|
-| Create or initialize a workflow | `templates/workflow/setup/CONTEXT.md`, `questionnaire.md`, and `validation-checklist.md` | Configured workflow plan or workflow files |
-| Configure workflow-wide behavior | `templates/workflow/AGENTS.md`, `CONTEXT.md`, and `_config/` | Updated identity, routing, or stable configuration |
-| Define a stage | `templates/workflow/stages/_TEMPLATE/` | One concrete stage contract and folders |
-| Validate a workflow | `templates/workflow/setup/validation-checklist.md` and the files under review | Pass or fail findings |
+| Create or initialize a workflow | `templates/workflow/setup/CONTEXT.md`, then the needed operation | Assembled workflow, validated before execution |
+| Define content and run schema | `templates/workflow/setup/define/CONTEXT.md` and its declared inputs | Stable references, work products, and future input fields |
+| Define a stage | `templates/workflow/setup/build-stage/CONTEXT.md` and its declared inputs | One concrete stage contract and input schema |
+| Configure workflow-wide routing | `templates/workflow/setup/build-router/CONTEXT.md` and its declared inputs | Updated identity and router |
+| Add quality and recovery | `templates/workflow/setup/add-quality/CONTEXT.md` and its declared inputs | Configured Measure, Learn, and control rules |
+| Validate a workflow | `templates/workflow/setup/validate/CONTEXT.md` and the files under review | Pass or routed findings |
 | Explain the architecture | `templates/workflow/README.md` and the minimum relevant template file | Plain-English explanation |
 
 If the request combines operations, run only the required operations in order.
@@ -61,19 +63,19 @@ Before the first write:
 
 Never overwrite an existing workflow or source file without explicit permission. Do not invent a destination, source location, owner, approval, or stage requirement.
 
-### 3. Set up the workflow
+### 3. Assemble the workflow
 
 For a new workflow:
 
-1. Use the bundled skeleton as the starting structure.
-2. Read the setup contract and ask only the questions needed to configure the workflow.
+1. Use the bundled skeleton as the starting structure and `_config/conventions.md` for general workflow rules. Apply destination-specific conventions when supplied.
+2. Read the setup router and only the selected operation contract; ask only the questions needed for that operation.
 3. Collect setup answers in plain English. Ask one question at a time when clarification is needed.
-4. Define the workflow outcome, users, routes, inputs, references, outputs, review gates, and verification checks.
-5. Configure the quality threshold, acceptance criteria, rubric, correction routes, and human-only interventions.
-6. Replace placeholders in the copied workflow files. Preserve the template's folder roles.
-7. Create only the production stages needed for the stated outcome, then keep the quality-gate and next-action roles as the final two stages. Measure and Learn are the default names.
-8. Record setup decisions in `setup/initialization-record.md` in the configured workflow.
-9. Run the validation checklist before any work stage runs.
+4. Define work products, stable references, draft success criteria, and future Layer 4 input schemas. Do not populate run values during setup.
+5. Build only the production stages needed; each stage has one transformation and a stable input schema under its `references/`.
+6. Build the root identity and router from available stages.
+7. Add the final quality-gate and next-action roles; configure criteria, rubric, correction routes, and human-only interventions.
+8. Replace required placeholders in configured files. Record setup decisions in `setup/initialization-record.md`.
+9. Validate the assembly before any work stage runs. Each operation can also run alone when its inputs exist.
 
 Stop when a required answer, review, input, or validation check is missing.
 
@@ -87,7 +89,7 @@ Declared Inputs -> One Transformation -> Declared Outputs
 
 For each stage:
 
-- Name the exact files or locations it may read.
+- Name the exact reusable files, future run records, and source types it may read.
 - State the one transformation it owns.
 - Name every output, path, format, and intended consumer.
 - State the input gate and stop conditions.
@@ -110,7 +112,7 @@ Report each failed check with the file or stage that needs correction. Do not pa
 - Keep `AGENTS.md` focused on workflow-wide behavior.
 - Keep `CONTEXT.md` focused on routing and context loading.
 - Keep stable rules in `_config/`, `references/`, or `shared/`.
-- Keep run-specific inputs and outputs in the relevant stage folders.
+- Keep populated source pointers in `{{RUN_PATH}}/stages/<stage>/inputs.md`, generated stage outputs beside them, and manifest and state at the run root. Keep only stable schemas in reusable stage folders.
 - Make stage dependencies explicit and one-way.
 - Prefer existing sources over duplicated copies.
 - Do not copy external source material unless the workflow requires it.
@@ -138,6 +140,7 @@ When the workflow writes files, the normal durable outputs are:
 | Configured workflow | User-confirmed destination | Reusable workflow structure |
 | Setup record | `setup/initialization-record.md` | Decisions made during setup |
 | Quality policy | `_config/quality-policy.md` | Gate threshold, correction loop, and blocker rules |
+| Run manifest | `{{RUN_PATH}}/run-manifest.md` | Confirmed sources and run identity |
 | Run state | `{{RUN_PATH}}/run-state.md` | Pause, block, resume, and completion state |
 | Validation result | Chat or configured workflow setup output | Evidence that the structure passed checks |
 
@@ -153,10 +156,12 @@ Every generated Markdown artifact must lead with the answer or next action and i
 | `templates/workflow/README.md` | Architecture overview and folder map |
 | `templates/workflow/AGENTS.md` | Workflow behavior template |
 | `templates/workflow/CONTEXT.md` | Workflow routing template |
-| `templates/workflow/setup/CONTEXT.md` | Setup process and outputs |
+| `templates/workflow/setup/CONTEXT.md` | Setup router to independent operations |
+| `templates/workflow/setup/{define,build-stage,build-router,add-quality,validate}/CONTEXT.md` | One-job setup contracts |
 | `templates/workflow/setup/questionnaire.md` | Setup questions |
 | `templates/workflow/setup/validation-checklist.md` | Validation checks |
 | `templates/workflow/stages/_TEMPLATE/CONTEXT.md` | Stage contract template |
+| `templates/workflow/stages/_TEMPLATE/references/input-schema.md` | Stable input schema template |
 | `templates/workflow/_config/` | Stable configuration templates |
 | `templates/workflow/stages/02-measure/` | Reusable quality gate stage and criteria/rubric starters |
 | `templates/workflow/stages/03-learn/` | Reusable What Now stage and handoff template |

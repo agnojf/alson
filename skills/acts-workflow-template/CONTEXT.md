@@ -7,11 +7,12 @@ This package turns the ACTS workflow skeleton into a configured, reusable workfl
 
 | Task | Load | Do not load by default |
 |---|---|---|
-| Create or initialize | `templates/workflow/setup/CONTEXT.md`, `questionnaire.md`, and `validation-checklist.md` | Stage templates |
-| Configure root behavior | `templates/workflow/AGENTS.md`, `CONTEXT.md`, and the required `_config/` files | Setup questions and stage files |
-| Create a stage | `templates/workflow/stages/_TEMPLATE/CONTEXT.md`, `input/INPUTS.md`, and both reference READMEs | Unrelated workflow files |
-| Configure quality loop | `templates/workflow/_config/quality-policy.md`, `templates/workflow/_config/run-state-template.md`, and Measure/Learn templates | Unrelated production references |
-| Validate | `templates/workflow/setup/validation-checklist.md` and the files under review | Full template package |
+| Create or initialize | `templates/workflow/setup/CONTEXT.md`, then only the needed operation | Unrelated operations and stages |
+| Define content and run schema | `templates/workflow/setup/define/CONTEXT.md` and its declared inputs | Other setup operations |
+| Create one stage | `templates/workflow/setup/build-stage/CONTEXT.md`, stage template `CONTEXT.md` and `references/input-schema.md` | Other stage files |
+| Configure root behavior and router | `templates/workflow/setup/build-router/CONTEXT.md` and its declared inputs | Setup questions and unrelated stages |
+| Configure quality loop | `templates/workflow/setup/add-quality/CONTEXT.md` and its declared inputs | Unrelated production references |
+| Validate | `templates/workflow/setup/validate/CONTEXT.md` and files under review | Full template package |
 | Explain | `templates/workflow/README.md` and the minimum file needed to answer the question | Unrelated stages and references |
 
 ## Required Sequence
@@ -19,15 +20,14 @@ This package turns the ACTS workflow skeleton into a configured, reusable workfl
 1. Resolve the destination and intended outcome.
 2. Confirm the write scope before creating or changing files.
 3. Load the selected route and only its declared references.
-4. Configure the workflow identity, router, and stable rules.
-5. Create the production stages and keep the quality-gate and next-action roles as the final two; Measure and Learn are the default names.
-6. Configure the quality threshold, acceptance criteria, correction routes, and resumable run state.
-7. Validate the workflow.
-8. Stop if a required input, review, approval, or check is missing.
+4. Define work products, stable knowledge, draft success criteria, and future run input schemas (not populated run values).
+5. Build each needed production stage independently, then the workflow identity and router.
+6. Add quality and recovery with Measure and Learn as the final two roles, then validate.
+7. Stop if a required input, review, approval, or check is missing.
 
 ## Template Root
 
-The source skeleton is stored at `templates/workflow/`. Copy its roles into the user's destination. Do not copy `.DS_Store` files or introduce run-specific artifacts into the template package.
+The source skeleton is stored at `templates/workflow/`. Use its `_config/conventions.md` when building workflows; apply destination-specific rules only when they exist. Copy only the needed roles into the destination. Layers 0-3 are reusable; actual Layer 4 inputs, source pointers, outputs, and state belong to the confirmed `{{RUN_PATH}}`.
 
 ## Core Interface
 

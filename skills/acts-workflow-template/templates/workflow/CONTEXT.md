@@ -10,6 +10,7 @@
 | User intent | Route to | Expected outcome |
 |---|---|---|
 | Invoke or initialize an unconfigured workflow | `setup/CONTEXT.md` | Configure the workflow before work begins |
+| Define, assemble, or validate a reusable workflow | `setup/CONTEXT.md` | Route to one setup operation using ACTS conventions |
 | Produce or revise an outcome | The requested production stage | Declared deliverable |
 | Check quality | `stages/02-measure/CONTEXT.md` or configured Measure stage | Quality decision and correction route |
 | Ask what happens next | `stages/03-learn/CONTEXT.md` or configured Learn stage | `what-now.md` recommendation after a passed gate |
@@ -17,7 +18,7 @@
 
 ## Invocation Rule
 
-On entry, read `setup/CONTEXT.md` before routing. If this template still contains placeholders, run setup and stop when a required answer, review, or validation check is missing. Once setup is complete, route the original request to the smallest matching stage.
+For a new workflow, route to `setup/CONTEXT.md` and select the smallest setup operation. On entry to a copied workflow, check its setup state before routing. If placeholders remain, complete the missing setup operations and validate; stop when a required answer, review, or check is missing. Once setup is complete, route the original request to the smallest matching stage.
 
 ## Routing Rules
 
@@ -65,9 +66,11 @@ Load only when referenced by the selected stage:
 - `_config/quality-policy.md` and `_config/run-state-template.md` for pipeline control
 - `references/*`
 - `shared/*`
-- selected stage `references/*`
-- selected stage `input/*`
-- prior stage outputs
+- selected stage `references/*`, including input schemas
+- `{{RUN_PATH}}/run-manifest.md` and selected stage `inputs.md`
+- external sources named in the selected stage's run input record and declared prior outputs
+
+When building or changing a workflow, setup loads `_config/conventions.md`; load only applicable specialist sections from `references/specialized-conventions.md`.
 
 ## Workflow Map
 
@@ -75,14 +78,15 @@ Load only when referenced by the selected stage:
 |---|---|---|
 | `AGENTS.md` | Global agent behavior | 0 |
 | `CONTEXT.md` | Routing and workflow navigation | 1 |
-| `setup/CONTEXT.md` | Initialization contract | 2 during setup |
+| `setup/CONTEXT.md` | Setup router | 1 during setup |
+| `setup/<operation>/CONTEXT.md` | One setup operation and interface | 2 during setup |
 | `stages/*/CONTEXT.md` | Stage interface and execution contract | 2 |
 | `_config/` | Stable workflow configuration | 3 |
 | `references/` | Stable domain/source references | 3 |
 | `shared/` | Reusable material across stages | 3 |
 | `stages/*/references/` | Stage-specific reference material | 3 |
-| `stages/*/input/` | Current-run source material or pointers | 4 |
-| `{{RUN_PATH}}/stages/*/` | Current-run generated artifacts and handoffs | 4 |
+| `{{RUN_PATH}}/run-manifest.md`, `run-state.md` | Current-run inputs and execution state | 4 |
+| `{{RUN_PATH}}/stages/*/` | Current-run source pointers, generated artifacts, and handoffs | 4 |
 
 ## Review Gates
 

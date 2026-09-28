@@ -3,11 +3,16 @@
 
 ## Structure
 
+- [ ] Setup can run Define, Build Stage, Build Router, Add Quality, or Validate independently when each operation's required inputs exist.
+- [ ] Setup decisions and incomplete routes are recorded; no work stage runs before assembly validation passes.
+- [ ] New workflows use `_config/conventions.md` as the general rule source and load only applicable specialist conventions.
+- [ ] The destination and its routing point to the configured workflow; any exception to ACTS conventions is recorded.
 - [ ] `AGENTS.md` contains workflow-wide behavior only.
 - [ ] `CONTEXT.md` can route common user requests.
 - [ ] Each stage has one clear job.
 - [ ] Each stage declares an explicit `Inputs -> Transform -> Outputs` interface.
 - [ ] Stable references are separated from working artifacts.
+- [ ] Layers 0-3 contain only reusable definitions and schemas; no resolved input pointers or run artifacts live in reusable stage folders.
 
 ## Stage Interfaces
 
@@ -20,12 +25,16 @@
 
 ## Context Discipline
 
+- [ ] Inputs name exact paths and required sections; full-file reads are marked when necessary.
+- [ ] Each stable rule has one canonical source; previous outputs are not used as build templates.
 - [ ] No stage requires loading the full workflow by default.
 - [ ] Required context is explicitly named.
 - [ ] Missing or invalid inputs cause a stop, not an assumption.
 
 ## Flow
 
+- [ ] Sequential stage names are zero-padded; independent capabilities use descriptive names.
+- [ ] Final production stage writes a handoff listing every artifact for Measure.
 - [ ] Sequential dependencies are explicit.
 - [ ] Independent stages can be invoked independently.
 - [ ] Review or approval gates are clear.
@@ -43,6 +52,11 @@
 
 ## Traceability
 
+- [ ] Run path is confirmed before writing and is outside the reusable workflow; generated artifacts, manifest, and state use declared run locations, never reusable stage folders.
+- [ ] Each stage's input schema is stable; populated `inputs.md` and its source locations agree with `{{RUN_PATH}}/run-manifest.md`.
+- [ ] The run schemas allow two runs to use separate inputs and outputs without editing Layers 0-3.
+- [ ] New runs do not overwrite old runs; continuation and external handoffs are recorded when used.
+- [ ] A status request checks run state and verified outputs rather than template folder contents.
 - [ ] Important outputs can be traced to their inputs or references.
 - [ ] Verification checks exist for important cross-stage alignment.
 - [ ] Known-invalid outputs are not passed downstream.
