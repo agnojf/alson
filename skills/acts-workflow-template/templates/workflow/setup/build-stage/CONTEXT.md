@@ -12,18 +12,19 @@ Workflow definition + one job + declared sources -> specify transformation -> on
 | Input | Scope | Use |
 |---|---|---|
 | `<destination>/_config/workflow.md` and `setup/initialization-record.md` | Product, source, and proposed stage details | Intended result |
-| `../../stages/_TEMPLATE/CONTEXT.md` and `references/input-schema.md` | Full files | Contract shape |
+| `../../_templates/stage/CONTEXT.md` and `references/input-schema.md` | Full files | Contract shape |
 | `../../_config/conventions.md` | Stage And Routing Contracts; Names And Run Outputs | Interface and output rules |
 | Existing producer/consumer stage contracts | Only adjacent interfaces, when revising | Keep handoffs aligned |
 
 **Input gate:** Confirm destination and one job. For a revision, inspect the target stage and get permission before overwriting it. Stop if a required source or consumer cannot be named.
 
-**One transformation:** Fill one `Inputs -> One Transformation -> Outputs` contract, with input gate, stage-scoped `inputs.md` location, exact outputs, verify checks, review gate, correction input, and run state. Use numbered names only when order matters. The final production stage must write `build-handoff.md` naming all outputs Measure will audit.
+**One transformation:** Fill one `Inputs -> One Transformation -> Outputs` contract, select exactly one `Configured mode` (`Manifest-only` or `Stage record required`), then define the input gate, exact outputs, verify checks, review gate, correction input, and run state. Use numbered names only when order matters. The final production stage must write `build-handoff.md` naming all outputs Measure will audit.
 
 | Output | Location | Format | Consumer |
 |---|---|---|---|
 | One production contract | `<destination>/stages/<stage>/CONTEXT.md` | Markdown | Router and executing stage |
 | Stable input schema | `<destination>/stages/<stage>/references/input-schema.md` | Markdown | Future run input gate |
+| Stage registry entry | `<destination>/_config/stage-registry.md` | Markdown | Router, quality builder, and validator |
 | Recorded stage choice and any deferred dependency | `<destination>/setup/initialization-record.md` | Markdown | Router and quality builder |
 
 **Verify:** Each required input has an exact location and check; each output has a format and consumer; upstream and downstream paths agree. Do not execute the stage or write run data. Stop if a required handoff is undefined.

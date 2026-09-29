@@ -14,12 +14,13 @@ Production outputs + draft success criteria -> define gate and recovery -> Measu
 | `<destination>/_config/workflow.md`, `setup/initialization-record.md` | Products and draft success criteria | Quality target |
 | Final production `CONTEXT.md` and adjacent contracts | Handoff, output paths, correction ownership | Auditable outputs |
 | `../../_config/quality-policy.md`, `run-state-template.md`, `run-manifest-template.md`, `run-input-template.md` | Full files | Gate and runtime control schemas |
-| `../../stages/02-measure/`, `../../stages/03-learn/` | Contracts and reference starters | Final roles |
+| `../../_templates/measure/`, `../../_templates/learn/` | Contracts and reference starters | Final roles |
+| `<destination>/_config/stage-registry.md` | Full file | Production order and final role paths |
 | `<destination>/CONTEXT.md` | Quality and next-action routes | Connect roles |
 
 **Input gate:** Stop if no final production handoff exists or acceptance criteria and correction owners cannot be defined. Do not weaken criteria to obtain a pass.
 
-**One transformation:** Configure the threshold, measurable criteria and rubric, failure-to-stage mapping, review gates, run state and manifest templates, and Learn's passed-gate precondition. Place Measure and Learn last, renumber paths if needed, and update their declared consumers and router paths. Do not run the gate during setup.
+**One transformation:** Configure the threshold, measurable criteria and rubric, failure-to-stage mapping, review gates, run state and manifest templates, and Learn's passed-gate precondition. Choose the next two stage paths after production is known, copy the Measure and Learn role templates there, update the stage registry and router, and resolve every quality-role placeholder. Do not run the gate during setup.
 
 | Output | Location | Format | Consumer |
 |---|---|---|---|

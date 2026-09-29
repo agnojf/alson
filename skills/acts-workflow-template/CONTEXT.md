@@ -10,7 +10,8 @@ This package turns the ACTS workflow skeleton into a configured, reusable workfl
 | Create or initialize | `templates/workflow/setup/CONTEXT.md`, then only the needed operation | Unrelated operations and stages |
 | Define content and run schema | `templates/workflow/setup/define/CONTEXT.md` and its declared inputs | Other setup operations |
 | Create one stage | `templates/workflow/setup/build-stage/CONTEXT.md`, stage template `CONTEXT.md` and `references/input-schema.md` | Other stage files |
-| Configure root behavior and router | `templates/workflow/setup/build-router/CONTEXT.md` and its declared inputs | Setup questions and unrelated stages |
+| Configure workflow routing | `templates/workflow/setup/build-router/CONTEXT.md` and its declared inputs | Setup questions and unrelated stages |
+| Configure workflow-wide behavior | `templates/workflow/setup/build-agent/CONTEXT.md` and its declared inputs | Setup questions and unrelated stages |
 | Configure quality loop | `templates/workflow/setup/add-quality/CONTEXT.md` and its declared inputs | Unrelated production references |
 | Validate | `templates/workflow/setup/validate/CONTEXT.md` and files under review | Full template package |
 | Explain | `templates/workflow/README.md` and the minimum file needed to answer the question | Unrelated stages and references |
@@ -21,9 +22,10 @@ This package turns the ACTS workflow skeleton into a configured, reusable workfl
 2. Confirm the write scope before creating or changing files.
 3. Load the selected route and only its declared references.
 4. Define work products, stable knowledge, draft success criteria, and future run input schemas (not populated run values).
-5. Build each needed production stage independently, then the workflow identity and router.
-6. Add quality and recovery with Measure and Learn as the final two roles, then validate.
-7. Stop if a required input, review, approval, or check is missing.
+5. Build each needed production stage independently.
+6. Build the workflow identity and router, then configure workflow-wide agent behavior.
+7. Add quality and recovery with Measure and Learn as the final two roles, then validate.
+8. Stop if a required input, review, approval, or check is missing.
 
 ## Template Root
 

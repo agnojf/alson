@@ -15,11 +15,11 @@ Confirmed outcome + source needs + conventions -> define content and run shape -
 | `../questionnaire.md` | Outcome, Users, Inputs, References, Outputs, Review and Approval | Ask only unresolved questions |
 | `../../_config/conventions.md` | Context And Sources; Names And Run Outputs | Layer and run boundary |
 | Applicable `../../references/specialized-conventions.md` sections | Relevant sections only | Domain constraints |
-| Destination-specific conventions, if supplied | Relevant sections only | Local integration |
+| `_core/CONVENTIONS.md` | Repository-Specific Rules, only for a destination in this repository | Repository routing |
 
 **Input gate:** Stop if the destination or repeated outcome is unclear. Do not invent an owner, source, approval, or output root.
 
-**One transformation:** Specify work products and their consumers; locate authoritative stable references; define the fields a future `run-manifest.md` and each stage `inputs.md` must hold. Define observable success criteria early as a draft. Do not create populated Layer 4 material.
+**One transformation:** Specify work products and their consumers; locate authoritative stable references; define the fields a future `run-manifest.md` must hold and identify stages that will need detailed `inputs.md` records. Define observable success criteria early as a draft. Do not create populated Layer 4 material.
 
 | Output | Location | Format | Consumer |
 |---|---|---|---|

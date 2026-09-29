@@ -30,6 +30,21 @@ Do not run this stage when:
 
 Contract rules: read only declared inputs, perform one transformation, write declared outputs, and stop on missing or invalid input or an active review or approval gate.
 
+## Input Resolution
+
+Choose one mode during setup:
+
+| Mode | Use |
+|---|---|
+| Manifest-only | The run manifest contains enough resolved source detail for the stage input gate. Do not create a stage `inputs.md` unless the run needs extra resolution evidence. |
+| Stage record required | Create `{{RUN_PATH}}/stages/<stage>/inputs.md` because the stage needs source selection, interpretation, or traceability detail beyond the manifest. |
+
+| Setting | Value |
+|---|---|
+| Configured mode | [Manifest-only / Stage record required] |
+
+The selected mode is part of this stage contract. Do not require a stage record by habit.
+
 ## Inputs
 
 | Layer | Source / location | Scope | Required | Use |
@@ -39,17 +54,18 @@ Contract rules: read only declared inputs, perform one transformation, write dec
 | 3 | `references/input-schema.md` | Full file | Yes | Required input fields and checks |
 | 3 | `../../_config/run-input-template.md` | Full file | Yes | Run input record shape |
 | 4 | `{{RUN_PATH}}/run-manifest.md` | Confirmed inputs and run identity | Yes | Current-run source inventory |
-| 4 | `{{RUN_PATH}}/stages/<stage>/inputs.md` | Full file | Yes | Resolved source pointers for this run |
-| 4 | Sources named in `{{RUN_PATH}}/stages/<stage>/inputs.md` | [Exact section or Full file] | Yes/No | [Working input] |
+| 4 | `{{RUN_PATH}}/stages/<stage>/inputs.md` | Full file when the stage record is required | No | Detailed resolved source pointers for this run |
+| 4 | Sources named in the manifest or declared stage record | [Exact section or Full file] | Yes/No | [Working input] |
 | 4 | `{{RUN_PATH}}/stages/<prior-stage>/[file]` | [Section or Full file] | Yes/No | [Prior output] |
-| 4 | `{{RUN_PATH}}/stages/<measure-stage>/audit-findings.md` | Assigned findings | No | Quality corrections for this stage |
+| 4 | `{{RUN_PATH}}/stages/{{MEASURE_STAGE}}/audit-findings.md` | Assigned findings | No | Quality corrections for this stage |
 | 4 | `{{RUN_PATH}}/run-state.md` | Resume fields | No | Resume or blocked-run context |
 
 ## Input Gate
 
 Before execution:
 - confirm every required input exists,
-- confirm the run path is distinct from the reusable workflow and `inputs.md` agrees with the manifest,
+- confirm the run path is distinct from the reusable workflow,
+- when the stage record is required, confirm `inputs.md` exists and agrees with the manifest,
 - confirm each input is the intended source,
 - confirm the input is usable for the declared transformation,
 - when resuming, confirm the new information satisfies the recorded resume condition,
@@ -69,7 +85,7 @@ Before execution:
 | Output | Location | Format | Intended consumer |
 |---|---|---|---|
 | [Artifact] | `{{RUN_PATH}}/stages/<stage>/[file]` | [Markdown/JSON/etc.] | [User / next stage / external system] |
-| Resolved inputs | `{{RUN_PATH}}/stages/<stage>/inputs.md` | Markdown | Stage and run manifest |
+| Resolved inputs | `{{RUN_PATH}}/stages/<stage>/inputs.md` when required by the contract | Markdown | Stage and run manifest |
 | Run state | `{{RUN_PATH}}/run-state.md` | Markdown | Router and resume flow |
 
 Output guarantees:

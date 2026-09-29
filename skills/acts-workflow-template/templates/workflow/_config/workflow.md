@@ -37,6 +37,6 @@
 | Acceptance rule | Every applicable criterion must pass |
 | Failure route | Responsible production stage, then Measure again |
 | Blocked or paused run | Record `{{RUN_PATH}}/run-state.md` and resume later |
-| Final stage | Learn produces `what-now.md` only after Measure passes |
+| Final roles | Stage registry's Measure then Learn roles |
 
 The detailed policy is `_config/quality-policy.md`. The run-state schema is `_config/run-state-template.md`.

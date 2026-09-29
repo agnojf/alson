@@ -3,7 +3,7 @@
 
 Audit the final production output and decide whether the quality gate passes.
 
-If production stages expand, rename or renumber this stage as the final quality-gate role and update its paths.
+During setup, copy this role to the final quality-gate path recorded as `Measure` in `_config/stage-registry.md`.
 
 ## Trigger
 
@@ -32,9 +32,15 @@ Build handoff + production outputs + criteria + rubric + policy -> quality audit
 | 3 | `../../_config/run-state-template.md` | Full file | Yes | State schema |
 | 3 | `references/acceptance-criteria.md` | Full file | Yes | Pass/fail criteria |
 | 3 | `references/quality-rubric.md` | Full file | Yes | Quality scoring |
-| 4 | `{{RUN_PATH}}/stages/<final-production-stage>/build-handoff.md` | Full file | Yes | Output inventory |
+| 4 | `{{RUN_PATH}}/stages/{{FINAL_PRODUCTION_STAGE}}/build-handoff.md` | Full file | Yes | Output inventory |
 | 4 | Paths listed in the build handoff | Full files | Yes | Outputs to audit |
 | 4 | `{{RUN_PATH}}/run-state.md` | Attempt and resume fields | No | Current attempt and resume context |
+
+The run manifest is the source inventory. This role uses manifest-only input resolution unless the configured workflow explicitly declares a detailed stage input record.
+
+| Setting | Value |
+|---|---|
+| Configured mode | Manifest-only |
 
 ## Input Gate
 
@@ -58,7 +64,7 @@ Do not fix production artifacts inside Measure. Do not run Learn on a failed or 
 
 | Output | Location | Format | Intended consumer |
 |---|---|---|---|
-| Audit findings | `{{RUN_PATH}}/stages/02-measure/audit-findings.md` | Markdown | Router and production stage |
+| Audit findings | `{{RUN_PATH}}/stages/{{MEASURE_STAGE}}/audit-findings.md` | Markdown | Router and production stage |
 | Run state | `{{RUN_PATH}}/run-state.md` | Markdown | Router and resume flow |
 
 The audit must include the attempt number, score, threshold, gate result, criterion results, evidence, all corrections, responsible stages, blockers, and next route.

@@ -3,20 +3,24 @@
 
 ## Structure
 
-- [ ] Setup can run Define, Build Stage, Build Router, Add Quality, or Validate independently when each operation's required inputs exist.
+- [ ] Setup can run Define, Build Stage, Build Router, Build Agent, Add Quality, or Validate independently when each operation's required inputs exist.
+- [ ] Build Agent is a separate operation and owns only workflow-wide behavior.
 - [ ] Setup decisions and incomplete routes are recorded; no work stage runs before assembly validation passes.
 - [ ] New workflows use `_config/conventions.md` as the general rule source and load only applicable specialist conventions.
-- [ ] The destination and its routing point to the configured workflow; any exception to ACTS conventions is recorded.
+- [ ] The destination and repository routing point to the configured workflow; any exception to ACTS conventions is recorded.
 - [ ] `AGENTS.md` contains workflow-wide behavior only.
 - [ ] `CONTEXT.md` can route common user requests.
+- [ ] `_config/stage-registry.md` is the sole source for ordered roles and Measure/Learn paths.
 - [ ] Each stage has one clear job.
 - [ ] Each stage declares an explicit `Inputs -> Transform -> Outputs` interface.
 - [ ] Stable references are separated from working artifacts.
+- [ ] Cross-stage reusable material lives in `references/`; no separate `shared/` layer is required.
 - [ ] Layers 0-3 contain only reusable definitions and schemas; no resolved input pointers or run artifacts live in reusable stage folders.
 
 ## Stage Interfaces
 
 - [ ] Every required input is explicitly named.
+- [ ] Each stage declares `Manifest-only` or `Stage record required` input resolution.
 - [ ] The transformation is narrow enough to describe as one job.
 - [ ] Every output has a declared location and format.
 - [ ] Downstream consumers explicitly declare upstream outputs they depend on.
@@ -29,6 +33,7 @@
 - [ ] Each stable rule has one canonical source; previous outputs are not used as build templates.
 - [ ] No stage requires loading the full workflow by default.
 - [ ] Required context is explicitly named.
+- [ ] A stage input record is not required unless the stage contract selects it.
 - [ ] Missing or invalid inputs cause a stop, not an assumption.
 
 ## Flow
@@ -40,7 +45,7 @@
 - [ ] Review or approval gates are clear.
 - [ ] Re-running one stage does not require rebuilding unrelated stages.
 - [ ] Changed inputs or rules make only dependent downstream outputs stale.
-- [ ] The quality-gate and next-action roles are the final two stages, regardless of the number of production stages.
+- [ ] The quality-gate and next-action roles in the stage registry are the final two stages, regardless of the number of production stages.
 - [ ] A failed quality gate has an explicit correction route back to production.
 - [ ] Learn is blocked until the quality gate passes.
 
@@ -73,3 +78,11 @@
 - [ ] `Blocked` and `Paused` runs record the resume stage and exact next input or action.
 - [ ] A resume request continues from recorded state instead of restarting unaffected stages.
 - [ ] Learn produces `what-now.md` with one clear next recommendation after the gate passes.
+
+## Deterministic Checks
+
+- [ ] The structural validator passes with no missing required files.
+- [ ] The structural validator reports unresolved placeholders in configured required fields.
+- [ ] The structural validator confirms unique stage paths and ordered final roles.
+- [ ] The structural validator confirms registry paths exist and quality handoff paths match the registry.
+- [ ] Semantic judgment is still performed against the remaining checklist items.

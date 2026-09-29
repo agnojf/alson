@@ -25,7 +25,7 @@ Calculate the score as:
 Quality % = (total awarded points / total possible points) x 100
 ```
 
-Use the scoring scale in `stages/02-measure/references/quality-rubric.md`. Do not round a score up to meet the threshold.
+Use the scoring scale in the configured Measure stage's `references/quality-rubric.md`. The Measure path is owned by `_config/stage-registry.md`. Do not round a score up to meet the threshold.
 
 ## Quality Loop
 

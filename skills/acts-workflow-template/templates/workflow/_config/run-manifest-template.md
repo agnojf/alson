@@ -18,9 +18,9 @@ Create this record at `{{RUN_PATH}}/run-manifest.md` before executing a stage. T
 
 ## Confirmed Inputs
 
-| Stage | Input | Resolved source | Verified |
-|---|---|---|---|
-| [stage] | [input] | [path, URL, identifier, or user-provided value] | [Yes/No] |
+| Stage | Input | Resolved source | Detailed input record | Verified |
+|---|---|---|---|---|
+| [stage] | [input] | [path, URL, identifier, or user-provided value] | [path or Manifest-only] | [Yes/No] |
 ```
 
-Each stage also writes `{{RUN_PATH}}/stages/<stage>/inputs.md` with its own resolved sources. Keep the manifest and stage input records consistent. A run with missing required sources must stop at its input gate.
+The manifest is authoritative for confirmed run inputs. A stage writes `{{RUN_PATH}}/stages/<stage>/inputs.md` only when its contract selects `Stage record required`; the manifest records that path. Keep any stage input record consistent with the manifest. A run with missing required sources must stop at its input gate.

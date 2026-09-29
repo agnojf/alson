@@ -30,13 +30,16 @@ A stage should be independently understandable, executable, testable, replaceabl
 
 1. Confirm the destination and repeated outcome. Use `setup/CONTEXT.md` to select the next needed operation.
 2. **Define:** specify work products, stable references, draft success criteria, and future run input schemas. Use only the needed questions from `setup/questionnaire.md`.
-3. **Build Stage:** use `stages/_TEMPLATE/` to define one transformation at a time, including its stable input schema under `references/`.
-4. **Build Router:** connect plain-language requests to available stages in `AGENTS.md` and `CONTEXT.md`.
-5. **Add Quality:** configure Measure and Learn as the final two roles, including criteria, correction routes, and runtime state.
-6. **Validate:** run `setup/validation-checklist.md` before executing the workflow.
-7. At execution, put resolved source pointers in `{{RUN_PATH}}/stages/<stage>/inputs.md` and all generated outputs under `{{RUN_PATH}}`. Run only the required stages and stop at review gates.
+3. **Build Stage:** use `_templates/stage/` to define one transformation at a time, including its stable input schema under `references/`.
+4. **Build Router:** connect plain-language requests to available stages in `CONTEXT.md`.
+5. **Build Agent:** configure workflow-wide behavior in `AGENTS.md` without duplicating routing or quality rules.
+6. **Add Quality:** instantiate Measure and Learn as the final two roles after production stages are known, including criteria, correction routes, and runtime state.
+7. **Validate:** run `python3 scripts/validate.py` and `setup/validation-checklist.md` before executing the workflow.
+8. At execution, put confirmed sources in `{{RUN_PATH}}/run-manifest.md`; create stage `inputs.md` only where the stage contract requires detailed resolution. Keep all generated outputs under `{{RUN_PATH}}` and stop at review gates.
 
 Apply `_config/conventions.md` and only applicable sections of `references/specialized-conventions.md`. Each setup operation may be invoked on its own when its required inputs exist. Setup defines Layer 4 schemas; a run supplies Layer 4 values.
+
+Run `python3 scripts/validate.py` to check the template and `python3 -m unittest scripts/test_validate.py` to test the validator. Run `python3 scripts/validate.py --workflow <configured-workflow-path>` to check a configured assembly's structure before applying the semantic checklist.
 
 When this workflow is invoked while it still contains placeholders, setup runs before any work stage.
 
@@ -46,11 +49,11 @@ When this workflow is invoked while it still contains placeholders, setup runs b
 |---|---|---|
 | 0 | `AGENTS.md` | Global identity and operating rules |
 | 1 | `CONTEXT.md` | Workflow map, routing, and what to load |
-| 2 | `stages/<stage>/CONTEXT.md` | Stage interface: inputs, transform, outputs, verification |
-| 3 | `_config/`, `references/`, `shared/`, stage `references/` | Stable constraints and reusable knowledge |
+| 2 | `stages/<stage>/CONTEXT.md`, `_templates/` | Executable stage contracts and build-time role blueprints |
+| 3 | `_config/`, `references/`, stage `references/` | Stable constraints and reusable knowledge |
 | 4 | `{{RUN_PATH}}/` and declared external sources | Run-specific pointers, working artifacts, state, and handoffs |
 
-Layers 0-3 describe the reusable workflow. Layer 4 is the current run. The run manifest lists confirmed inputs; each stage's `inputs.md` resolves the sources it will read. External sources stay in their original locations.
+Layers 0-3 describe the reusable workflow. Layer 4 is the current run. The run manifest lists confirmed inputs; a stage's `inputs.md` adds detail only when its contract requires it. External sources stay in their original locations.
 
 ## Quality Loop
 
@@ -67,6 +70,8 @@ Measure passes only when the quality score meets the configured threshold and ev
 
 - One stage, one job.
 - Every stage declares `Inputs -> Transform -> Outputs`.
+- The stage registry is the single source for role order and Measure/Learn paths.
+- The run manifest is required; a stage `inputs.md` is used only when its contract requires detailed source resolution.
 - Load only the context needed for the current task.
 - Keep stable rules separate from working artifacts.
 - Do not depend on hidden state.
@@ -78,6 +83,7 @@ Measure passes only when the quality score meets the configured threshold and ev
 - Review before important downstream work.
 - Re-run only affected stages when inputs or rules change.
 - Fix recurring problems at the source instruction or reference file, not only in the output.
+- Keep ordered roles and configured quality paths in `_config/stage-registry.md`.
 - Use numbering only when execution order matters.
 - Keep the agent interface simple. The user should ask for outcomes, not navigate internals.
 
@@ -102,6 +108,7 @@ Measure passes only when the quality score meets the configured threshold and ev
 ├── _config/
 │   ├── workflow.md
 │   ├── conventions.md
+│   ├── stage-registry.md
 │   ├── review-policy.md
 │   ├── quality-policy.md
 │   ├── run-manifest-template.md
@@ -110,27 +117,30 @@ Measure passes only when the quality score meets the configured threshold and ev
 ├── references/
 │   ├── README.md
 │   └── specialized-conventions.md
-├── shared/
-│   └── README.md
-├── stages/
-│   ├── _TEMPLATE/
+├── _templates/
+│   ├── stage/
 │   │   ├── CONTEXT.md
 │   │   └── references/
-│   │       ├── README.md
-│   │       └── input-schema.md
-│   ├── 02-measure/
+│   ├── measure/
 │   │   ├── CONTEXT.md
 │   │   └── references/
-│   └── 03-learn/
+│   └── learn/
 │       ├── CONTEXT.md
 │       └── references/
+├── stages/
+│   └── .gitkeep
+├── scripts/
+│   ├── validate.py
+│   └── test_validate.py
 └── setup/
     ├── CONTEXT.md
     ├── define/CONTEXT.md
     ├── build-stage/CONTEXT.md
     ├── build-router/CONTEXT.md
+    ├── build-agent/CONTEXT.md
     ├── add-quality/CONTEXT.md
     ├── validate/CONTEXT.md
+    ├── initialization-record-template.md
     ├── questionnaire.md
     └── validation-checklist.md
 ```
@@ -153,4 +163,4 @@ risk-analysis/
 artifact-builder/
 ```
 
-The router in `CONTEXT.md` decides which stage to load. The stage contract decides exactly what it may read, what it transforms, and what it returns.
+The router in `CONTEXT.md` decides which stage to load. The stage registry decides role order and quality paths. The stage contract decides exactly what it may read, what it transforms, and what it returns.

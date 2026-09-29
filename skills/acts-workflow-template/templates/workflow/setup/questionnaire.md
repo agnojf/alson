@@ -43,13 +43,15 @@ Which later stage or user consumes each output?
 
 Where do the stage inputs live?
 
-Which source types and validation rules belong in stable schemas? Which actual external sources will be resolved in each run's manifest and stage `inputs.md`?
+Which source types and validation rules belong in stable schemas? Which actual external sources will be resolved in each run's manifest? Which stages need a detailed `inputs.md` record rather than manifest-only resolution?
 
 What makes an input valid enough to proceed?
 
 ## 6. References
 
 What stable rules, policies, templates, examples, or conventions should persist across runs?
+
+Which specialist conventions apply (creative, code, or project management)? Record any justified exceptions to the general conventions.
 
 ## 7. Outputs
 
@@ -73,7 +75,7 @@ What verification failure should stop downstream work?
 
 ## 10. Routing
 
-What user requests map to which stages?
+What user requests map to which stages, including the registry's Measure and Learn roles?
 
 What requests should not be supported?
 
@@ -94,3 +96,9 @@ For each likely failure, which production stage can correct it?
 What information, access, authority, or human decision would block the agent?
 
 When the run is blocked or paused, what is the confirmed run output root, and what condition allows resumption from `{{RUN_PATH}}/run-state.md`?
+
+## 13. Workflow Behavior
+
+Which workflow-wide rules belong in `AGENTS.md` rather than a route or stage contract?
+
+What user-facing response should report the outcome, decisions, risks, and next action?

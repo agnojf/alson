@@ -15,6 +15,7 @@ Use this skill for:
 - Creating a new workflow from the bundled skeleton
 - Configuring an existing workflow that follows the skeleton
 - Defining or revising workflow routing
+- Configuring workflow-wide agent behavior
 - Creating a stage from the stage contract template
 - Adding or configuring the final Measure and Learn stages
 - Checking a workflow against the validation checklist
@@ -44,7 +45,8 @@ Route the request to the smallest useful operation:
 | Create or initialize a workflow | `templates/workflow/setup/CONTEXT.md`, then the needed operation | Assembled workflow, validated before execution |
 | Define content and run schema | `templates/workflow/setup/define/CONTEXT.md` and its declared inputs | Stable references, work products, and future input fields |
 | Define a stage | `templates/workflow/setup/build-stage/CONTEXT.md` and its declared inputs | One concrete stage contract and input schema |
-| Configure workflow-wide routing | `templates/workflow/setup/build-router/CONTEXT.md` and its declared inputs | Updated identity and router |
+| Configure workflow-wide routing | `templates/workflow/setup/build-router/CONTEXT.md` and its declared inputs | Intent routes |
+| Configure workflow-wide behavior | `templates/workflow/setup/build-agent/CONTEXT.md` and its declared inputs | Configured `AGENTS.md` |
 | Add quality and recovery | `templates/workflow/setup/add-quality/CONTEXT.md` and its declared inputs | Configured Measure, Learn, and control rules |
 | Validate a workflow | `templates/workflow/setup/validate/CONTEXT.md` and the files under review | Pass or routed findings |
 | Explain the architecture | `templates/workflow/README.md` and the minimum relevant template file | Plain-English explanation |
@@ -73,9 +75,10 @@ For a new workflow:
 4. Define work products, stable references, draft success criteria, and future Layer 4 input schemas. Do not populate run values during setup.
 5. Build only the production stages needed; each stage has one transformation and a stable input schema under its `references/`.
 6. Build the root identity and router from available stages.
-7. Add the final quality-gate and next-action roles; configure criteria, rubric, correction routes, and human-only interventions.
-8. Replace required placeholders in configured files. Record setup decisions in `setup/initialization-record.md`.
-9. Validate the assembly before any work stage runs. Each operation can also run alone when its inputs exist.
+7. Configure workflow-wide behavior in `AGENTS.md` without duplicating routing or quality rules.
+8. Add the final quality-gate and next-action roles; configure criteria, rubric, correction routes, and human-only interventions.
+9. Replace required placeholders in configured files. Record setup decisions in `setup/initialization-record.md`.
+10. Validate the assembly before any work stage runs. Each operation can also run alone when its inputs exist.
 
 Stop when a required answer, review, input, or validation check is missing.
 
@@ -111,8 +114,8 @@ Report each failed check with the file or stage that needs correction. Do not pa
 - Read only the files needed for the selected operation.
 - Keep `AGENTS.md` focused on workflow-wide behavior.
 - Keep `CONTEXT.md` focused on routing and context loading.
-- Keep stable rules in `_config/`, `references/`, or `shared/`.
-- Keep populated source pointers in `{{RUN_PATH}}/stages/<stage>/inputs.md`, generated stage outputs beside them, and manifest and state at the run root. Keep only stable schemas in reusable stage folders.
+- Keep stable rules in `_config/` or `references/`.
+- Keep confirmed sources in `{{RUN_PATH}}/run-manifest.md`; create `{{RUN_PATH}}/stages/<stage>/inputs.md` only when the stage contract requires detailed resolution. Keep generated outputs beside the run-scoped inputs, and manifest and state at the run root. Keep only stable schemas in reusable stage folders.
 - Make stage dependencies explicit and one-way.
 - Prefer existing sources over duplicated copies.
 - Do not copy external source material unless the workflow requires it.
@@ -157,11 +160,14 @@ Every generated Markdown artifact must lead with the answer or next action and i
 | `templates/workflow/AGENTS.md` | Workflow behavior template |
 | `templates/workflow/CONTEXT.md` | Workflow routing template |
 | `templates/workflow/setup/CONTEXT.md` | Setup router to independent operations |
-| `templates/workflow/setup/{define,build-stage,build-router,add-quality,validate}/CONTEXT.md` | One-job setup contracts |
+| `templates/workflow/setup/{define,build-stage,build-router,build-agent,add-quality,validate}/CONTEXT.md` | One-job setup contracts |
 | `templates/workflow/setup/questionnaire.md` | Setup questions |
 | `templates/workflow/setup/validation-checklist.md` | Validation checks |
-| `templates/workflow/stages/_TEMPLATE/CONTEXT.md` | Stage contract template |
-| `templates/workflow/stages/_TEMPLATE/references/input-schema.md` | Stable input schema template |
+| `templates/workflow/setup/initialization-record-template.md` | Setup decision record |
+| `templates/workflow/_config/stage-registry.md` | Ordered roles and final quality-stage paths |
+| `templates/workflow/_templates/stage/CONTEXT.md` | Stage contract template |
+| `templates/workflow/_templates/stage/references/input-schema.md` | Stable input schema template |
 | `templates/workflow/_config/` | Stable configuration templates |
-| `templates/workflow/stages/02-measure/` | Reusable quality gate stage and criteria/rubric starters |
-| `templates/workflow/stages/03-learn/` | Reusable What Now stage and handoff template |
+| `templates/workflow/_templates/measure/` | Reusable quality gate role and criteria/rubric starters |
+| `templates/workflow/_templates/learn/` | Reusable What Now role and handoff template |
+| `templates/workflow/scripts/` | Structural validator and validator tests |

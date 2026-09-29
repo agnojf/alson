@@ -3,7 +3,7 @@
 
 Answer `What Now?` after the quality gate passes and recommend the next useful action.
 
-If production stages expand, rename or renumber this stage as the final next-action role and update its paths.
+During setup, copy this role to the final next-action path recorded as `Learn` in `_config/stage-registry.md`.
 
 ## Trigger
 
@@ -31,10 +31,16 @@ Passed quality audit + current outputs + policy -> next-action assessment -> wha
 | 3 | `../../_config/quality-policy.md` | Learn precondition | Yes | Quality precondition and state rules |
 | 3 | `../../_config/run-state-template.md` | Full file | Yes | State schema |
 | 3 | `references/what-now-template.md` | Full file | Yes | Handoff structure |
-| 4 | `{{RUN_PATH}}/stages/02-measure/audit-findings.md` | Full file | Yes | Passed gate and evidence |
-| 4 | `{{RUN_PATH}}/stages/<final-production-stage>/build-handoff.md` | Output paths | Yes | Current-run inventory |
+| 4 | `{{RUN_PATH}}/stages/{{MEASURE_STAGE}}/audit-findings.md` | Full file | Yes | Passed gate and evidence |
+| 4 | `{{RUN_PATH}}/stages/{{FINAL_PRODUCTION_STAGE}}/build-handoff.md` | Output paths | Yes | Current-run inventory |
 | 4 | Current-run outputs named in the final build handoff and passing audit | Named output paths only | Yes | Current-run outputs and actions |
 | 4 | `{{RUN_PATH}}/run-state.md` | Full file | Yes | Current run context |
+
+The run manifest is the source inventory. This role uses manifest-only input resolution unless the configured workflow explicitly declares a detailed stage input record.
+
+| Setting | Value |
+|---|---|
+| Configured mode | Manifest-only |
 
 ## Input Gate
 
@@ -57,7 +63,7 @@ Learn recommends the next move. It must not claim human acceptance unless the de
 
 | Output | Location | Format | Intended consumer |
 |---|---|---|---|
-| What Now handoff | `{{RUN_PATH}}/stages/03-learn/what-now.md` | Markdown | User and next production cycle |
+| What Now handoff | `{{RUN_PATH}}/stages/{{LEARN_STAGE}}/what-now.md` | Markdown | User and next production cycle |
 | Run state | `{{RUN_PATH}}/run-state.md` | Markdown | Router and status view |
 
 ## Verify

@@ -3,7 +3,7 @@
 
 `specialized-conventions.md` contains optional creative, code, and project-management patterns. Load only relevant sections during setup.
 
-Store stable domain knowledge used across the workflow here.
+Store stable domain knowledge and reusable material used across the workflow here.
 
 Examples:
 - policies
@@ -11,5 +11,6 @@ Examples:
 - glossary
 - business rules
 - source-of-truth guidance
+- shared templates, schemas, formatting rules, and checklists
 
-Do not store run-specific working artifacts here.
+Keep stage-only references under that stage's `references/` folder. Do not store run-specific working artifacts here.

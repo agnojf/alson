@@ -38,7 +38,7 @@ ACTS adds operational controls around that foundation:
 
 The paper presents these as design rules and proposed controls. It does not establish better output quality, lower cost, faster execution, less human work, or better results than ICM or other agent frameworks.
 
-This package implements independent setup operations and keeps reusable input schemas separate from each run's manifest, source pointers, and outputs.
+This package implements independent setup operations, including separate router and workflow-agent configuration. It keeps reusable input schemas separate from each run's manifest, optional detailed source pointers, and outputs.
 
 ## Installation
 
@@ -87,7 +87,7 @@ Every configured pipeline ends with quality-gate and next-action roles, named Me
 | `skill.json` | Package metadata |
 | `templates/workflow/` | Reusable workflow skeleton from `workspaces/acts-workflow-template` |
 
-The bundled copy is self-contained. Keep it aligned with the canonical workspace template when releasing a new package version.
+The bundled copy is self-contained. It includes the structural validator and test suite. Keep it aligned with the canonical workspace template when releasing a new package version.
 
 ## What It Does Not Do
 

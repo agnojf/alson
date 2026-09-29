@@ -10,7 +10,7 @@ Your job is to interpret the user's request, route it to the correct stage, load
 ## Invocation and Setup
 
 - On every workflow invocation, check setup before routing the request to a work stage.
-- If the workflow still contains template placeholders, has no concrete stage, or has not passed setup validation, route to the smallest operation in `setup/CONTEXT.md`.
+- If the workflow still contains template placeholders, has no concrete production stage, or has not passed setup validation, route to the smallest operation in `setup/CONTEXT.md`.
 - Do not execute a work stage until setup is complete and the validation checklist passes.
 - After setup is complete, route the request to the smallest matching stage.
 
@@ -27,8 +27,8 @@ Your job is to interpret the user's request, route it to the correct stage, load
 
 ## Quality And Recovery
 
-- Every configured pipeline ends with quality-gate and next-action roles, named Measure and Learn by default, even when it has many production stages.
-- Measure is a hard gate. Learn runs only when the score meets the configured threshold and every applicable acceptance criterion passes.
+- Every configured pipeline ends with the `Measure` and `Learn` roles recorded in `_config/stage-registry.md`, even when it has many production stages.
+- `_config/quality-policy.md` owns the gate threshold, scoring, correction, and resume rules. Measure is a hard gate, and Learn runs only after that policy records a pass.
 - When Measure fails, route each correction to the smallest responsible production stage and measure again. Do not send known-invalid work to Learn.
 - When required information, access, authority, or human judgment is missing, write `{{RUN_PATH}}/run-state.md` with status `Blocked`, ask one focused question, and stop.
 - When the user asks to stop, write `run-state.md` with status `Paused`. Resume from its recorded stage when the user says `Resume this pipeline`.
@@ -56,7 +56,7 @@ The interface is a contract.
 1. Read this file.
 2. Read `CONTEXT.md`.
 3. Route the request to the smallest stage that can complete it.
-4. Before starting a new run, confirm its output root and distinct run path. Create its `run-manifest.md` and `run-state.md` from the stable templates. Record each selected stage's resolved sources in its run-scoped `inputs.md`. On resume, read the existing state and do not start a new run.
+4. Before starting a new run, confirm its output root and distinct run path. Create its `run-manifest.md` and `run-state.md` from the stable templates. Create a stage-scoped `inputs.md` only when that stage contract selects `Stage record required`. On resume, read the existing state and do not start a new run.
 5. Read the selected stage's `CONTEXT.md` and confirm its Inputs -> Transform -> Outputs contract.
 6. Load only the Layer 3 and Layer 4 files explicitly required by that stage.
 7. Pass the input gate. Stop if a required source is unresolved or differs from the manifest.
@@ -70,7 +70,7 @@ The interface is a contract.
 - Never load every workflow file by default.
 - Never invent an input path, approval, policy, requirement, or source fact.
 - Never overwrite source material unless the stage explicitly allows it.
-- Keep populated input pointers, run state, and generated artifacts under the confirmed `{{RUN_PATH}}`. Reusable stage folders hold contracts and stable references only.
+- Keep the run manifest, any populated stage input records, run state, and generated artifacts under the confirmed `{{RUN_PATH}}`. Reusable stage folders hold contracts and stable references only.
 - Do not run unrelated stages because they exist.
 - When a recurring output defect is found, identify the upstream instruction or reference that should be improved.
 - A failed local verification is revised and rerun in the current stage. If it cannot be resolved, record `Blocked`. A failed final quality gate follows `_config/quality-policy.md` and routes back for correction.

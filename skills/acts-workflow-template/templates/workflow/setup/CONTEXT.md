@@ -10,6 +10,7 @@ Assemble one reusable workflow at the confirmed destination. Setup defines futur
 | Define outcome, work products, and sources | `define/CONTEXT.md` | Stable definitions and run input schema |
 | Add or revise one transformation | `build-stage/CONTEXT.md` | One production stage contract |
 | Connect stages to user requests | `build-router/CONTEXT.md` | Workflow identity and routing |
+| Configure workflow-wide behavior | `build-agent/CONTEXT.md` | Root agent behavior and setup checks |
 | Add Measure, Learn, and recovery | `add-quality/CONTEXT.md` | Quality and next-action contracts |
 | Check readiness to run | `validate/CONTEXT.md` | Pass or file-specific findings |
 
@@ -17,7 +18,7 @@ Assemble one reusable workflow at the confirmed destination. Setup defines futur
 
 1. Confirm the destination, outcome, and write scope. Check existing files before changing them; do not overwrite an existing workflow or source without explicit permission.
 2. Select the smallest operation that satisfies the request. Load its contract and only its declared sources.
-3. For a new workflow, normally define content and the future Layer 4 schema, build each necessary production stage, build the router, add quality, then validate. Each operation may also be invoked alone when its inputs already exist.
+3. For a new workflow, normally define content and the future Layer 4 schema, build each necessary production stage, build the router, build workflow-wide agent behavior, add quality, then validate. Each operation may also be invoked alone when its inputs already exist.
 4. Record decisions and justified exceptions in `setup/initialization-record.md` in the configured workflow. Do not claim readiness while required operations or validation are incomplete.
 5. After validation passes, route the original work request using the configured `CONTEXT.md`. Never run a production stage during setup.
 
