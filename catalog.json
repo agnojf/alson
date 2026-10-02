@@ -75,7 +75,7 @@
       "version": "1.0.0",
       "description": "Operates living project-control registers and tailored PMI process work with explicit PM approval gates.",
       "path": "skills/alson-pm-control",
-      "hash": "818bb0ac485bdced0a57ef5107b535b30185a485fe99f47bf87fbe537cd4ec15",
+      "hash": "88dbd3b16c5e254987317b95698a64b7c853cbad6a1d2d73e194d50f1e9dd00e",
       "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/alson-pm-control",
       "files": [
         "CHANGELOG.md",
@@ -145,6 +145,7 @@
         "templates/project-control.md",
         "templates/registers/action-log.md",
         "templates/registers/assumption-log.md",
+        "templates/registers/backlog.md",
         "templates/registers/change-log.md",
         "templates/registers/decision-log.md",
         "templates/registers/dependencies-log.md",

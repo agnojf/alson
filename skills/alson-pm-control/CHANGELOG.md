@@ -3,6 +3,7 @@
 
 ## Unreleased
 
+- Added a canonical product backlog register template to project setup.
 - Added a canonical lessons learned register to project setup and intake routing.
 - Added PM-controlled lesson lifecycle states and source traceability requirements.
 
