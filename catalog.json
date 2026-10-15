@@ -3,10 +3,10 @@
   "skills": [
     {
       "name": "acts-workflow-template",
-      "version": "2.2.0",
+      "version": "2.2.1",
       "description": "Creates and validates reusable ACTS workflows with explicit routing, stage contracts, quality gates, and resumable runs.",
       "path": "skills/acts-workflow-template",
-      "hash": "38d50eab1a0fe9ac2af84f930efa232378a91b8862d071afdaf98b41438c5bf4",
+      "hash": "2a261abd9cfc489b3ffd578f2faeda623b8bc98854c6eadb1e5f3422362c3837",
       "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/acts-workflow-template",
       "files": [
         "CHANGELOG.md",

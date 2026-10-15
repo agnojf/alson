@@ -16,41 +16,16 @@ This is the repository's main builder for new workspaces and reusable workflows.
 
 ## Invocation Rule
 
-For a new workspace or workflow, route to `setup/CONTEXT.md` and select the smallest setup operation. On entry to a copied workflow, check its setup state before routing. If placeholders remain, complete the missing setup operations and validate; stop when a required answer, review, or check is missing. Once setup is complete, route the original request to the smallest matching stage.
+For a new workspace or workflow, route to `setup/CONTEXT.md` and select the smallest setup operation. On entry to a copied workflow, check its setup state before routing. If placeholders remain, there is no concrete production stage, or setup validation has not passed, route to the smallest missing setup operation and stop. Once setup is complete, route the original request to the smallest matching stage.
 
 ## Routing Rules
 
 1. Match the user's request to the smallest stage that can complete the work.
 2. Do not run the full workflow when one stage is enough.
-3. If the request requires multiple stages, run only the required production stages in registry order, followed by Measure and Learn when the pipeline is completing.
-4. Stop when a required input, review, decision, or approval is missing.
-5. Do not route to Learn while the quality gate is failed, blocked, or paused.
+3. If the request requires multiple stages, use the order in `_config/stage-registry.md`; a completing pipeline includes its configured Measure and Learn roles.
+4. Defer input, review, approval, and quality-gate stops to the selected stage contract and the applicable policy.
+5. Route to Learn only when `_config/quality-policy.md` permits it.
 6. If no route matches, explain the gap before creating new workflow behavior.
-
-## Composition Rules
-
-Stages are composable because each stage exposes a clear interface:
-
-```text
-Declared Inputs -> One Transformation -> Declared Outputs
-```
-
-- A stage should be independently executable when its required inputs are available.
-- One stage's output becomes another stage's input only when the receiving stage declares that dependency.
-- Do not make stages depend on hidden state.
-- Do not make a stage read unrelated workflow content.
-- Keep branching decisions in routing or explicit stage rules rather than burying them in unrelated transformations.
-- Re-run only the stage affected by a changed input or rule unless downstream outputs are now stale.
-
-Every configured sequential pipeline ends as:
-
-```text
-production stages -> Measure -> Learn
-                         ^
-                         | quality correction or resume
-```
-
-The final stage paths are read from `_config/stage-registry.md`. Setup assigns them after production stages are known and preserves their contracts when the paths are changed.
 
 ## What to Load
 
@@ -70,6 +45,8 @@ Load only when referenced by the selected stage:
 
 When building or changing a workflow, setup loads `_config/conventions.md`; load only applicable specialist sections from `references/specialized-conventions.md`.
 
+The selected stage contract names the exact inputs, scopes, and runtime records for execution. Do not load unrelated workflow files by default.
+
 ## Workflow Map
 
 | Path | Purpose | Context layer |
@@ -86,15 +63,4 @@ When building or changing a workflow, setup loads `_config/conventions.md`; load
 | `{{RUN_PATH}}/run-manifest.md`, `run-state.md` | Current-run inputs and execution state | 4 |
 | `{{RUN_PATH}}/stages/*/` | Current-run source pointers, generated artifacts, and handoffs | 4 |
 
-Quality failure is corrected by the agent when possible. Human review and approval gates remain mandatory where configured. Missing information or user-requested stops use the resumable `Blocked` or `Paused` run states.
-
-## Definition of Done
-
-A request is complete when:
-- the correct route was used,
-- each executed stage respected its interface contract,
-- required inputs were present and valid,
-- the declared output was produced,
-- verification passed or exceptions were reported,
-- required review or approval gates were respected,
-- the user received a concise outcome-oriented response.
+This router identifies the route and context only. The selected stage contract owns execution and verification; `_config/quality-policy.md` owns quality recovery and resumable run states.

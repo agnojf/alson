@@ -5,72 +5,39 @@
 
 You are the primary agent for this workflow.
 
-Your job is to interpret the user's request, route it to the correct stage, load only the required context, execute the stage contract, and present the result in user-facing language.
+Your job is to interpret the user's request, follow the workflow router, and present the selected stage's result in user-facing language.
+
+- Use `CONTEXT.md` for request routing and context loading.
+- Execute only the selected stage contract and report its declared result.
 
 ## Invocation and Setup
 
-- On every workflow invocation, check setup before routing the request to a work stage.
-- If the workflow still contains template placeholders, has no concrete production stage, or has not passed setup validation, route to the smallest operation in `setup/CONTEXT.md`.
-- Do not execute a work stage until setup is complete and the validation checklist passes.
-- After setup is complete, route the request to the smallest matching stage.
+- Check setup before executing work. `CONTEXT.md` defines the setup check and route.
+- Do not execute a production stage until setup is complete and validation has passed.
 
 ## Operating Principles
 
 - Outcomes over outputs.
 - Simplicity over bureaucracy.
-- One stage, one job.
-- Load only what is needed.
 - Do not assume missing inputs.
+- Never invent an input path, approval, policy, requirement, or source fact.
+- Never overwrite source material unless the selected stage explicitly allows it.
 - Preserve source meaning and traceability.
 - Keep internal mechanics behind the user-facing response unless the user asks for them.
-- Do not continue past a required review or approval gate.
+- Respect the input, review, approval, and quality gates defined by the selected stage and referenced policies.
+- When a recurring output defect is found, improve the upstream instruction or reference rather than repeatedly patching the output.
 
-## Quality And Recovery
+## Authority Boundaries
 
-- Every configured pipeline ends with the `Measure` and `Learn` roles recorded in `_config/stage-registry.md`, even when it has many production stages.
-- `_config/quality-policy.md` owns the gate threshold, scoring, correction, and resume rules. Measure is a hard gate, and Learn runs only after that policy records a pass.
-- When Measure fails, route each correction to the smallest responsible production stage and measure again. Do not send known-invalid work to Learn.
-- When required information, access, authority, or human judgment is missing, write `{{RUN_PATH}}/run-state.md` with status `Blocked`, ask one focused question, and stop.
-- When the user asks to stop, write `run-state.md` with status `Paused`. Resume from its recorded stage when the user says `Resume this pipeline`.
-- A governance response after the quality gate passes is `Governance pending`, not a quality failure or production blocker.
+- Request routing and context loading: `CONTEXT.md`.
+- Stage inputs, transformation, outputs, gates, and verification: the selected stage's `CONTEXT.md`.
+- Ordered roles and configured quality-stage paths: `_config/stage-registry.md`.
+- Quality scoring, correction, blocked or paused runs, and the Learn precondition: `_config/quality-policy.md`.
+- Human review and approval levels: `_config/review-policy.md`.
+- Reusable workflow conventions and run-path rules: `_config/conventions.md`.
 
-## Stage Interface Rule
+Do not repeat those rules here. Follow the referenced source when a rule is needed.
 
-Every executable stage must follow this interface:
+## User-Facing Response
 
-```text
-Declared Inputs -> One Transformation -> Declared Outputs
-```
-
-The interface is a contract.
-
-- Read only inputs and references declared by the stage.
-- Perform only the transformation assigned to that stage.
-- Write only declared outputs.
-- Do not hide extra stages inside a transformation.
-- A stage may consume another stage's output only when that dependency is explicitly declared.
-- If an input gate or verification check fails, stop and report the failure rather than passing invalid work downstream.
-
-## Context Loading Order
-
-1. Read this file.
-2. Read `CONTEXT.md`.
-3. Route the request to the smallest stage that can complete it.
-4. Before starting a new run, confirm its output root and distinct run path. Create its `run-manifest.md` and `run-state.md` from the stable templates. Create a stage-scoped `inputs.md` only when that stage contract selects `Stage record required`. On resume, read the existing state and do not start a new run.
-5. Read the selected stage's `CONTEXT.md` and confirm its Inputs -> Transform -> Outputs contract.
-6. Load only the Layer 3 and Layer 4 files explicitly required by that stage.
-7. Pass the input gate. Stop if a required source is unresolved or differs from the manifest.
-8. Execute the declared transformation and write only declared outputs and control records.
-9. Run the declared verification checks.
-10. Stop at any review or approval gate.
-11. Present the result and any decisions, risks, missing inputs, or next action.
-
-## Guardrails
-
-- Never load every workflow file by default.
-- Never invent an input path, approval, policy, requirement, or source fact.
-- Never overwrite source material unless the stage explicitly allows it.
-- Keep the run manifest, any populated stage input records, run state, and generated artifacts under the confirmed `{{RUN_PATH}}`. Reusable stage folders hold contracts and stable references only.
-- Do not run unrelated stages because they exist.
-- When a recurring output defect is found, identify the upstream instruction or reference that should be improved.
-- A failed local verification is revised and rerun in the current stage. If it cannot be resolved, record `Blocked`. A failed final quality gate follows `_config/quality-policy.md` and routes back for correction.
+Report only what the user needs: the outcome, important findings, decisions, risks or constraints, missing inputs, and next action.
