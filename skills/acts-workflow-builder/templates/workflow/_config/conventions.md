@@ -21,6 +21,13 @@ Use this file as the source for building new ACTS workspaces and workflows. Appl
 - Layers 0-3 define the reusable machine; Layer 4 is the current run. Keep stable references out of run folders. Keep resolved run-specific source pointers, values, and outputs out of reusable workflow folders. External sources stay in place and are named in the run manifest and, when required, stage input records. A stage can consume another stage's output only when it declares that dependency.
 - Stable reference dependencies point one way. Declared quality corrections, prior-cycle handoffs, and resume routes may point back to production; do not create hidden circular source dependencies.
 
+## Builder Boundary
+
+- The bundled workflow skeleton is a builder source. Its `setup/`, `_templates/`, and `scripts/` directories support assembly and validation only.
+- A configured workflow contains its identity, router, `_config/`, `references/`, and completed `stages/`. Do not copy the builder-only directories into the configured destination.
+- Validate the final destination from the builder source. The configured workflow must pass without a local setup record or builder validator.
+- Remove any temporary builder-only directories before reporting a configured workflow as complete.
+
 ## Stage And Routing Contracts
 
 - Assemble workflows through independent setup operations: Define content and future run schemas, Build one Stage, Build Router, Build Agent, Add Quality, Validate. Run only the operation needed; do not execute production before validation passes.

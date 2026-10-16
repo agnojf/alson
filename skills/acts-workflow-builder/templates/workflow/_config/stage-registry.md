@@ -17,4 +17,4 @@ Use this file as the single source for the configured workflow's ordered stage r
 - Measure and Learn are always the final two roles.
 - Stage paths are workspace-relative and use the configured folder names.
 - A route, handoff, correction, or resume reference uses this registry instead of repeating a role path elsewhere.
-- Setup progress, decisions, and validation status are recorded in `setup/initialization-record.md`.
+- Builder setup progress, decisions, and validation status are recorded during assembly. This record is not copied into configured workflows.

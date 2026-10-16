@@ -32,8 +32,20 @@ def configured_context(source: Path, destination: Path, replacements: dict[str, 
     destination.write_text(text, encoding="utf-8")
 
 
+def remove_builder_lines(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    lines = [
+        line
+        for line in text.splitlines()
+        if not any(marker in line.lower() for marker in ("setup", "_templates/", "scripts/", "initialization-record"))
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def make_configured_workflow(root: Path) -> None:
     shutil.copytree(TEMPLATE_ROOT, root, ignore=shutil.ignore_patterns("__pycache__"))
+    for name in ("AGENTS.md", "CONTEXT.md", "README.md"):
+        remove_builder_lines(root / name)
     registry = root / "_config/stage-registry.md"
     replace_text(
         registry,
@@ -54,19 +66,6 @@ def make_configured_workflow(root: Path) -> None:
             "[Tool]": "Markdown",
             "[Purpose]": "Create the report",
             "[Constraint]": "Use verified sources",
-        },
-    )
-
-    initialization = root / "setup/initialization-record.md"
-    shutil.copyfile(root / "setup/initialization-record-template.md", initialization)
-    replace_text(
-        initialization,
-        {
-            "[confirmed destination]": str(root),
-            "[confirmed name]": "Report Builder",
-            "[repeated outcome]": "A report",
-            "[confirmed owner or team]": "Operations",
-            "[confirmed run output root]": str(root / "outputs"),
         },
     )
 
@@ -114,6 +113,12 @@ def make_configured_workflow(root: Path) -> None:
             dirs_exist_ok=True,
         )
 
+    for stage_path in stage_paths.values():
+        remove_builder_lines(stage_path / "CONTEXT.md")
+
+    for directory in ("setup", "_templates", "scripts"):
+        shutil.rmtree(root / directory)
+
 
 class ValidatorTests(unittest.TestCase):
     def run_validator(self, *args: str) -> subprocess.CompletedProcess[str]:
@@ -136,6 +141,25 @@ class ValidatorTests(unittest.TestCase):
             result = self.run_validator("--workflow", str(root))
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertIn("Structure: PASS", result.stdout)
+
+    def test_configured_workflow_rejects_builder_material(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="acts-builder-material-") as directory:
+            root = Path(directory) / "report-builder"
+            make_configured_workflow(root)
+            (root / "setup").mkdir()
+            result = self.run_validator("--workflow", str(root))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("builder-only directory: setup/", result.stdout)
+
+    def test_configured_workflow_rejects_builder_references(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="acts-builder-reference-") as directory:
+            root = Path(directory) / "report-builder"
+            make_configured_workflow(root)
+            with (root / "CONTEXT.md").open("a", encoding="utf-8") as stream:
+                stream.write("\nsetup/CONTEXT.md\n")
+            result = self.run_validator("--workflow", str(root))
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("builder-only reference setup", result.stdout)
 
     def test_missing_registry_stage_fails(self) -> None:
         with tempfile.TemporaryDirectory(prefix="acts-missing-stage-") as directory:

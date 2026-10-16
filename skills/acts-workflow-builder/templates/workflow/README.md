@@ -7,6 +7,10 @@ A reusable, vendor-neutral workflow skeleton for AI-assisted work.
 
 Use this template to create a new workflow without redesigning the context architecture each time.
 
+## Builder Boundary
+
+This template is the builder source, not a configured workflow. `setup/`, `_templates/`, and `scripts/` are internal assembly and validation tools. A finished workflow keeps its identity, routing, `_config/`, `references/`, and completed `stages/` only. Remove the builder-only directories before reporting the configured workflow as complete.
+
 The template combines:
 
 1. **Five-layer context architecture** for routing and focused context loading,
@@ -36,6 +40,7 @@ A stage should be independently understandable, executable, testable, replaceabl
 6. **Add Quality:** instantiate Measure and Learn as the final two roles after production stages are known, including criteria, correction routes, and runtime state.
 7. **Validate:** run `python3 scripts/validate.py` and `setup/validation-checklist.md` before executing the workflow.
 8. At execution, put confirmed sources in `{{RUN_PATH}}/run-manifest.md`; create stage `inputs.md` only where the stage contract requires detailed resolution. Keep all generated outputs under `{{RUN_PATH}}` and stop at review gates.
+9. Before handoff, remove builder-only directories from the configured destination. Validate the final destination with the builder's external validator.
 
 Apply `_config/conventions.md` and only applicable sections of `references/specialized-conventions.md`. Each setup operation may be invoked on its own when its required inputs exist. Setup defines Layer 4 schemas; a run supplies Layer 4 values.
 

@@ -11,7 +11,7 @@ from pathlib import Path
 
 SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 
-COMMON_FILES = (
+WORKFLOW_FILES = (
     "AGENTS.md",
     "CONTEXT.md",
     "README.md",
@@ -23,9 +23,6 @@ COMMON_FILES = (
     "_config/run-manifest-template.md",
     "_config/run-input-template.md",
     "_config/run-state-template.md",
-    "setup/CONTEXT.md",
-    "setup/questionnaire.md",
-    "setup/validation-checklist.md",
 )
 
 SETUP_OPERATIONS = (
@@ -49,6 +46,12 @@ TEMPLATE_FILES = (
     "setup/initialization-record-template.md",
     "references/README.md",
     "references/specialized-conventions.md",
+)
+
+BUILDER_ONLY_DIRECTORIES = (
+    "setup",
+    "_templates",
+    "scripts",
 )
 
 CONFIGURATION_MARKERS = (
@@ -97,14 +100,18 @@ class Validator:
             return ""
 
     def check_common_files(self) -> None:
-        for relative in COMMON_FILES:
+        for relative in WORKFLOW_FILES:
             self.require_file(relative)
 
-        for operation in SETUP_OPERATIONS:
-            self.require_file(f"setup/{operation}/CONTEXT.md")
-
-        if self.configured:
-            self.require_file("setup/initialization-record.md")
+        if not self.configured:
+            for relative in (
+                "setup/CONTEXT.md",
+                "setup/questionnaire.md",
+                "setup/validation-checklist.md",
+            ):
+                self.require_file(relative)
+            for operation in SETUP_OPERATIONS:
+                self.require_file(f"setup/{operation}/CONTEXT.md")
 
     def check_template_layout(self) -> None:
         for relative in TEMPLATE_FILES:
@@ -300,13 +307,28 @@ class Validator:
                     if expected_build not in text:
                         self.error(f"Learn input path does not match the final production stage: {self.relative(learn)}")
 
+    def check_configured_layout(self) -> None:
+        for directory in BUILDER_ONLY_DIRECTORIES:
+            if (self.root / directory).exists():
+                self.error(f"configured workflow contains builder-only directory: {directory}/")
+
+    def check_configured_references(self) -> None:
+        paths = [self.root / name for name in ("AGENTS.md", "CONTEXT.md", "README.md")]
+        paths.extend(path for path in (self.root / "stages").glob("*/CONTEXT.md"))
+        for path in paths:
+            if not path.is_file():
+                continue
+            text = self.read(path).lower()
+            for marker in ("setup", "_templates/", "scripts/validate.py", "initialization-record"):
+                if marker in text:
+                    self.error(f"configured workflow contains builder-only reference {marker}: {self.relative(path)}")
+
     def check_configured_placeholders(self) -> None:
         paths = [
             self.root / "AGENTS.md",
             self.root / "CONTEXT.md",
             self.root / "_config/workflow.md",
             self.root / "_config/stage-registry.md",
-            self.root / "setup/initialization-record.md",
         ]
         paths.extend(path for path in (self.root / "stages").glob("*/CONTEXT.md"))
         for path in paths:
@@ -333,6 +355,8 @@ class Validator:
         self.check_common_files()
         self.check_router()
         if self.configured:
+            self.check_configured_layout()
+            self.check_configured_references()
             rows = self.check_registry()
             self.check_configured_stages(rows)
             self.check_configured_placeholders()

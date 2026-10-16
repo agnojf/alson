@@ -32,7 +32,7 @@ Do not use this skill for:
 
 Read `CONTEXT.md` in this package first. Then load only the route-specific template files listed there.
 
-The bundled source skeleton is under `templates/workflow/`. Treat those files as templates. Do not treat their placeholders as configured values.
+The bundled source skeleton is under `templates/workflow/`. Treat those files as templates. Do not treat their placeholders as configured values. Do not copy the builder-only `setup/`, `_templates/`, or `scripts/` directories into the finished workflow.
 
 ## Workflow
 
@@ -77,8 +77,8 @@ For a new workflow:
 6. Build the root identity and router from available stages.
 7. Configure workflow-wide behavior in `AGENTS.md` without duplicating routing or quality rules.
 8. Add the final quality-gate and next-action roles; configure criteria, rubric, correction routes, and human-only interventions.
-9. Replace required placeholders in configured files. Record setup decisions in `setup/initialization-record.md`.
-10. Validate the assembly before any work stage runs. Each operation can also run alone when its inputs exist.
+9. Replace required placeholders in configured files. Record setup decisions during assembly and carry confirmed decisions into the configured files.
+10. Validate the assembly before any work stage runs, then remove `setup/`, `_templates/`, and `scripts/` from the configured destination. Each operation can also run alone when its inputs exist.
 
 Stop when a required answer, review, input, or validation check is missing.
 
@@ -136,16 +136,17 @@ For setup work, report:
 - Validation results
 - The next action
 
+Setup mechanics are internal. Do not present setup instructions or builder file paths in the final user-facing result unless the user asks for them.
+
 When the workflow writes files, the normal durable outputs are:
 
 | Output | Location | Purpose |
 |---|---|---|
 | Configured workflow | User-confirmed destination | Reusable workflow structure |
-| Setup record | `setup/initialization-record.md` | Decisions made during setup |
 | Quality policy | `_config/quality-policy.md` | Gate threshold, correction loop, and blocker rules |
 | Run manifest | `{{RUN_PATH}}/run-manifest.md` | Confirmed sources and run identity |
 | Run state | `{{RUN_PATH}}/run-state.md` | Pause, block, resume, and completion state |
-| Validation result | Chat or configured workflow setup output | Evidence that the structure passed checks |
+| Validation result | Chat or builder validation output | Evidence that the structure passed checks |
 
 Every generated Markdown artifact must lead with the answer or next action and include:
 

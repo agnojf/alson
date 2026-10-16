@@ -6,7 +6,7 @@
       "version": "3.0.0",
       "description": "Creates and validates reusable ACTS workflows with explicit routing, stage contracts, quality gates, and resumable runs.",
       "path": "skills/acts-workflow-builder",
-      "hash": "85967f7e911d07227a7bce6aacda2f69122921b469cbe9889de6bd2f500527ac",
+      "hash": "253da7edb8bd0e9724e54314fb43a9ea00ce1f2c26f58c2535044b609ffe96a8",
       "source": "https://raw.githubusercontent.com/agnojf/alson/main/skills/acts-workflow-builder",
       "files": [
         "CHANGELOG.md",

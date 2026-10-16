@@ -76,6 +76,8 @@ Trigger the skill with requests such as:
 
 The skill confirms the destination before writing, loads only the needed setup operation, and validates the assembled workflow before work begins. Each setup operation can also run alone when its inputs exist.
 
+Setup is internal to the builder. The finished workflow does not include the builder's `setup/`, `_templates/`, or `scripts/` directories, and the final response reports the configured workflow rather than setup instructions.
+
 Every configured pipeline ends with quality-gate and next-action roles, named Measure and Learn by default. Failed quality checks route back for correction and remeasurement. Missing information or an explicit stop is recorded in `run-state.md` so the run can resume later.
 
 ## Package Contents
